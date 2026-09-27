@@ -160,6 +160,28 @@ final class SiteTest extends TestCase
         }
     }
 
+    /**
+     * A guard against the bug that made the entire Urdu site render as an
+     * empty page: hiding something at left: -9999px is harmless left to right
+     * and catastrophic right to left, because left overflow IS scrollable in
+     * RTL. The document stretched to eleven thousand pixels wide and readers
+     * landed on blank space.
+     *
+     * Visually-hidden content is clipped, not pushed off the side.
+     */
+    public function testTheStylesheetHidesNothingOffTheSideOfThePage(): void
+    {
+        $css = (string) file_get_contents(dirname(__DIR__) . '/public/assets/css/site.css');
+        // Strip comments, so the note explaining this rule does not trip it.
+        $css = (string) preg_replace('~/\*.*?\*/~s', '', $css);
+
+        self::assertDoesNotMatchRegularExpression(
+            '~(left|right|inset-inline-start|inset-inline-end|text-indent)\s*:\s*-\d{3,}~i',
+            $css,
+            'A large negative offset creates horizontal overflow on right-to-left pages. Clip instead.'
+        );
+    }
+
     /** @return iterable<string,array{string}> */
     public static function publicUrls(): iterable
     {

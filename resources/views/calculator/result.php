@@ -85,7 +85,7 @@ $currency = $r['currency'] ?? '';
     <ul class="why">
         <?php foreach ($r['shares'] as $row): ?>
             <li>
-                <b><?= e($row['label']) ?> — <span class="fraction ltr"><?= e($row['fraction']) ?></span></b>
+                <b><?= e($row['label']) ?> <span class="nowrap">— <span class="fraction ltr"><?= e($row['fraction']) ?></span></span></b>
                 <span><?= e($row['reason']) ?></span>
             </li>
         <?php endforeach; ?>

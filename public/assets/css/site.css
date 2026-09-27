@@ -78,8 +78,29 @@ a { color: var(--green); text-underline-offset: .18em; text-decoration-thickness
 a:hover { color: var(--green-light); }
 :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: 3px; }
 
-.skip { position: absolute; left: -9999px; }
-.skip:focus { left: 1rem; top: 1rem; z-index: 50; background: var(--card); padding: .6rem 1rem; border-radius: var(--radius); box-shadow: var(--shadow); }
+/*
+ * The skip link is hidden by clipping, not by an off-screen offset. A
+ * left: -9999px would be harmless on a left-to-right page and catastrophic on
+ * a right-to-left one: left overflow IS scrollable in RTL, so it stretches the
+ * document to eleven thousand pixels wide and the reader lands on empty space.
+ */
+.skip {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0; border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+.skip:focus {
+    position: fixed;
+    inset-inline-start: 1rem; top: 1rem;
+    width: auto; height: auto; margin: 0;
+    clip: auto; clip-path: none;
+    z-index: 50; background: var(--card); color: var(--green);
+    padding: .6rem 1rem; border-radius: var(--radius); box-shadow: var(--shadow);
+}
 
 .wrap { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 16px; }
 .wrap--narrow { max-width: 760px; }
@@ -184,6 +205,7 @@ table.shares tfoot td { font-weight: 600; padding-top: .7rem; }
 .why li { padding: .7rem 0; border-bottom: 1px dotted var(--line); }
 .why li:last-child { border-bottom: 0; }
 .why b { font-weight: 600; }
+.nowrap { white-space: nowrap; }
 .why span { display: block; color: var(--ink-soft); font-size: .93rem; }
 
 .excluded { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.15rem; margin-bottom: 1.25rem; }
