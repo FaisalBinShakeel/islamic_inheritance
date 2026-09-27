@@ -1,0 +1,29 @@
+{
+    "name": "faisal/wirasat-calculator",
+    "description": "Islamic inheritance (Faraid) calculation engine: pure PHP, exact fraction arithmetic, four Sunni schools, with a sourced test suite.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5 || ^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Faraid\\": "src/Faraid/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Faraid\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "php bin/run-tests.php"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
