@@ -1,3 +1,6 @@
+# Local configuration — holds database credentials, never commit
+/config.php
+
 /vendor/
 composer.lock
 /.phpunit.cache/
@@ -6,3 +9,8 @@ composer.lock
 *.swp
 .idea/
 .vscode/
+
+# Installer output — never commit a site's own database or configuration
+/database/*.sqlite
+/database/*.sqlite-wal
+/database/*.sqlite-shm

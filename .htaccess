@@ -1,0 +1,23 @@
+# Root .htaccess — only needed on shared hosting where the document root is
+# this folder rather than public/.
+#
+# It forwards every request into public/ and blocks direct access to the
+# application code, the content files and the configuration. If you can point
+# the document root at public/ instead, do that: it is one less thing that can
+# be misconfigured.
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Never expose these, whatever else happens.
+    RewriteRule ^(src|resources|database|tests|docs|bin|vendor)/ - [F,L]
+    RewriteRule ^(config\.php|config\.example\.php|composer\.(json|lock)|phpunit\.xml)$ - [F,L]
+
+    # Everything else is served from public/.
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+<FilesMatch "^(config\.php|composer\.(json|lock)|phpunit\.xml)$">
+    Require all denied
+</FilesMatch>

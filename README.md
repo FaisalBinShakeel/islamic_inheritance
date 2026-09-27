@@ -1,77 +1,105 @@
-# Wirasat / Faraid calculation engine
+# Wirasat Calculator
 
-A pure PHP engine that takes a list of surviving heirs and returns their
-Islamic inheritance shares as exact fractions, with the reason for every
-share and the reason for every exclusion.
+An Islamic inheritance (faraid) calculator and guide library: a tested PHP
+rule engine, a plain-PHP site around it, and a web installer that makes
+setting it up the same three-screen job as any ordinary PHP application.
 
-This repository is **the engine only** — no web interface, no database, no
-blog. That is deliberate: the engine is built and reviewed before any
-interface exists, because a UI wrapped around unverified rules is worse than
-no tool at all.
+- **Install:** upload, open `/install.php`, answer three screens. See
+  [INSTALL.md](INSTALL.md).
+- **Requirements:** PHP 8.2+, and either SQLite (nothing to set up) or MySQL.
+- **Dependencies:** none at runtime. No framework, no build step, no Node.
 
-> ## Not ready for public use
+> ## Not ready for public promotion
 >
-> No qualified scholar has reviewed these rules yet. The expected answers in
-> the test suite are a developer's reading of the classical rule tables, cited
-> case by case but unsigned. The test runner says so on every run.
+> No qualified scholar has reviewed the inheritance rules yet. The expected
+> answers in the test suite are a careful reading of the classical rule
+> tables, cited case by case but unsigned. Every calculator result says so,
+> and the test runner repeats it on every run.
 >
-> Faraid is not a percentage split, and a wrong answer here affects real family
-> disputes and real money. See
-> [docs/REVIEW-CHECKLIST.md](docs/REVIEW-CHECKLIST.md) for what has to happen
-> before this ships.
+> Faraid is not a percentage split, and a wrong answer here affects real
+> family disputes and real money.
+> [docs/REVIEW-CHECKLIST.md](docs/REVIEW-CHECKLIST.md) lists the nine open
+> questions a reviewing scholar has to settle.
 
-## What it does
+## What is here
 
-- All four Sunni schools — Hanafi, Shafi'i, Maliki, Hanbali — from one shared
-  rule engine with a madhhab strategy object overriding only the divergent
-  rules. The school is required; the engine never guesses one.
-- Exact integer fraction arithmetic throughout. No floating point, so no
-  0.333333 drift on thirds and sixths.
-- The doctrines that naive calculators get wrong: awl, radd, Umariyyatan,
-  Mushtaraka, Akdariyya, asaba ma'a'l-ghayr, and the grandfather competing
-  with brothers under Zayd's doctrine.
-- Estate deductions in order — funeral expenses, debts, then bequests capped
-  at one third.
-- Pakistan's MFLO 1961 section 4 (grandchildren of a predeceased child
-  inheriting by representation) as an explicit, off-by-default toggle.
-- A `reason_key` on every share and every exclusion, so the same engine output
-  renders in English, Urdu, Arabic, French or Indonesian without the engine
-  knowing anything about language.
-- Loud failure: the shares must sum to exactly one, and the engine throws
-  rather than returning a distribution that does not balance.
+### The engine
 
-It does **not** attempt haml (unborn child), mafqud (missing person), khuntha
-(indeterminate gender), dhawu al-arham (distant kindred) or munasakha. Where
-it meets a case it cannot defend, it says so in `warnings` instead of
-inventing a number.
+A pure PHP class: an array in, a result out. No database, no HTTP, no session,
+no clock — which is what makes it testable, and testability is the only reason
+anyone should trust its output.
 
-## Running it
+- All four Sunni schools from **one** shared engine, with a madhhab strategy
+  object overriding only the divergent rules. The school is required; the
+  engine never guesses one.
+- **Exact integer fractions** throughout. No floating point, so no 0.333333
+  drift on thirds and sixths.
+- The doctrines simple calculators get wrong: awl, radd, Umariyyatan,
+  Mushtaraka, Akdariyya, asaba ma'a'l-ghayr and bi'l-ghayr, and the
+  grandfather competing with brothers under Zayd's doctrine.
+- Estate deductions in order, with the bequest capped at one third.
+- Pakistan's **MFLO 1961 s.4** representation as an explicit, off-by-default
+  toggle, because it is statute rather than fiqh.
+- A `reason_key` on every share and exclusion, so one calculation renders in
+  any language without the engine knowing one exists.
+- Shares must sum to exactly one, or the calculation throws.
 
-No dependencies are needed to use the engine or run the case suite:
+### The site
+
+- **Calculator** on one URL, no login, no page reload. Works with JavaScript
+  off — the form posts and the server renders the same result.
+- **Result as a document**: the heir table, a plain-language sentence for every
+  share, who was excluded and by whom, a print stylesheet that produces a
+  clean A4 page, copy-as-text and a WhatsApp share button.
+- **Guides**, with categories, tags, authors, table of contents, breadcrumbs
+  and related posts.
+- **English and Urdu** at launch, English at the root and every other language
+  in a subfolder, with reciprocal hreflang and full RTL.
+- **Admin**: posts, CSV import with a dry run, an error-report inbox, and an
+  audit page.
+- **Report an error** form, because a calculator that quietly carries a wrong
+  rule does real harm.
+
+### SEO, enforced in code
+
+Not a checklist — these are structural:
+
+| Rule | How it is guaranteed |
+| --- | --- |
+| The H1 never silently diverges from the title | Both are columns, shown side by side with a live warning; the H1 defaults to the title |
+| No hand-typed or `http://` canonical | Every canonical and `og:url` is built from one configured origin |
+| No dead internal link ships | Publishing is blocked if any internal href fails to resolve |
+| Meta description is never missing | Required field, live counter, blocks publishing |
+| One page, one H1 | The layout renders it; a body containing an `<h1>` is rejected |
+| No two posts chase one keyword | Unique index on (locale, target keyword) |
+
+Plus JSON-LD per page type (WebApplication, FAQPage, Article, BreadcrumbList,
+Blog, Organization), a generated `sitemap.xml` with real `lastmod` values, and
+`robots.txt`.
+
+## Running the tests
+
+No dependencies needed:
 
 ```bash
-php bin/run-tests.php              # every sourced case
-php bin/run-tests.php --group=awl  # one group
-php bin/run-tests.php --verbose    # list each case as it passes
-php bin/fuzz.php 20000             # random heir combinations, checks nothing crashes or loses the estate
+php bin/run-tests.php            # 109 sourced engine cases
+php bin/run-tests.php --verbose  # list each case
+php bin/fuzz.php 20000           # random heir combinations
+php bin/calculate.php '{"madhhab":"hanafi","deceased_gender":"male","heirs":{"wives":1,"sons":2,"daughters":3}}'
 ```
 
-With Composer installed, the same cases run under PHPUnit:
+With Composer, the same cases run under PHPUnit alongside the site tests:
 
 ```bash
 composer install
 ./vendor/bin/phpunit
 ```
 
-Calculate a case by hand:
+276 tests. The site tests install a throwaway copy of the whole site into a
+temporary SQLite file and fetch every published URL through the real kernel,
+checking the invariants in the table above.
 
-```bash
-php bin/calculate.php '{"madhhab":"hanafi","deceased_gender":"male",
-  "estate_value":5000000,"deductions":{"funeral":50000,"debts":200000},
-  "heirs":{"wives":1,"mother":true,"sons":2,"daughters":3}}'
-```
-
-## Using it from code
+## Using the engine on its own
 
 ```php
 require 'src/autoload.php';            // or vendor/autoload.php
@@ -81,109 +109,58 @@ $result = (new Faraid\Calculator())->calculate([
     'deceased_gender' => 'male',
     'estate_value'    => 5000000,
     'deductions'      => ['funeral' => 50000, 'debts' => 200000, 'wasiyyah' => 0],
-    'heirs'           => [
-        'wives' => 1, 'mother' => true, 'sons' => 2, 'daughters' => 3,
-    ],
+    'heirs'           => ['wives' => 1, 'mother' => true, 'sons' => 2, 'daughters' => 3],
 ]);
 
 $result->toArray();
 ```
 
-Output, trimmed:
-
-```json
-{
-  "madhhab": "hanafi",
-  "net_estate": 4750000,
-  "denominator": 168,
-  "awl_applied": false,
-  "radd_applied": false,
-  "shares": [
-    {
-      "heir": "wife", "count": 1,
-      "numerator": 21, "denominator": 168,
-      "fraction": "1/8", "percent": 12.5, "amount": 593750,
-      "basis": "quranic", "reason_key": "wife_with_descendant"
-    }
-  ],
-  "excluded": [],
-  "warnings": []
-}
-```
-
-The engine is a pure class: it takes an array, returns a `Result`, and touches
-no database, no HTTP, no session and no clock. That is what makes it testable,
-and testability is the only reason anyone should trust its output.
-
-### Heir keys
-
-`husband`, `wives`, `father`, `mother`, `paternal_grandfather`,
+Heir keys: `husband`, `wives`, `father`, `mother`, `paternal_grandfather`,
 `maternal_grandmother`, `paternal_grandmother`, `sons`, `daughters`,
 `sons_sons`, `sons_daughters`, `full_brothers`, `full_sisters`,
 `consanguine_brothers`, `consanguine_sisters`, `uterine_siblings`,
 `full_brother_sons`, `consanguine_brother_sons`, `paternal_uncles`,
 `consanguine_paternal_uncles`, `paternal_uncle_sons`,
-`consanguine_paternal_uncle_sons`.
+`consanguine_paternal_uncle_sons`. An unrecognised key is an error, never a
+silently dropped heir.
 
-An unrecognised key is an error, never a silently dropped heir.
-
-### Disqualification
-
-```php
-'disqualified' => [
-    ['heir' => 'sons', 'reason' => 'homicide', 'count' => 1],
-],
-```
-
-Reasons are `homicide` and `different_religion`. A disqualified heir neither
-inherits nor blocks anyone else.
-
-### MFLO 1961 representation
+Disqualification (`homicide`, `different_religion`) and MFLO representation:
 
 ```php
+'disqualified'         => [['heir' => 'sons', 'reason' => 'homicide', 'count' => 1]],
 'apply_mflo_1961'      => true,
-'predeceased_children' => [
-    ['gender' => 'male', 'sons' => 2, 'daughters' => 0],
-],
+'predeceased_children' => [['gender' => 'male', 'sons' => 2, 'daughters' => 0]],
 ```
 
 ## Layout
 
 ```
-src/Faraid/
-  Fraction.php          exact integer fraction arithmetic
-  HeirType.php          every heir class the engine knows
-  Input.php             normalisation and validation
-  Calculator.php        the rule engine
-  CalculationState.php  per-run scratch space (the Calculator stays stateless)
-  Share.php  Exclusion.php  Result.php
-  Madhhab/              the four schools — only the divergent rules
-tests/
-  Cases/                sourced cases, one file per area
-  Support/              loader and comparison harness
-bin/
-  run-tests.php  fuzz.php  calculate.php
-docs/
-  METHODOLOGY.md        what is implemented, on what authority
-  REVIEW-CHECKLIST.md   what the reviewing scholars must settle
+src/Faraid/      the rule engine — Fraction, HeirType, Input, Calculator, Madhhab/
+src/App/         the site — Config, Router, Seo, Locale, Translator, Controller/
+resources/views  plain PHP templates, one layout
+resources/lang   en.php and ur.php, every string in both
+database/content one file per seeded page, editable without touching code
+public/          document root: index.php, install.php, assets
+deploy/          nginx and Apache configs
+docs/            METHODOLOGY.md and REVIEW-CHECKLIST.md
+tests/           sourced engine cases, plus SEO, i18n and route tests
+bin/             run-tests.php, fuzz.php, calculate.php
 ```
 
-## The test suite is the build gate
+## Adding a language
 
-109 cases across single heirs, spouses, descendants, siblings, awl, radd, the
-named doctrines, exclusion chains, the madhhab divergences, MFLO 1961, estate
-deductions and input validation.
+1. Copy `resources/lang/en.php` to `resources/lang/xx.php` and translate it —
+   `TranslationTest` fails if a key is missing.
+2. Add the code to `locales` in `config.php`.
+3. Write original articles for that audience in `database/content/xx/`, or
+   through the admin. Do not machine-translate: the legal position, the school
+   and the search phrasing all differ.
 
-Every case carries a `source` field naming the Qur'anic verse, hadith,
-textbook or statute it comes from. **A case with no source is rejected by the
-loader.** A `verified_by` field records the scholar who confirmed the expected
-answer in writing; it is empty everywhere today, and the runner reports that
-count on every run.
+The locale then has its own subfolder, hreflang entries, sitemap URLs and
+language switcher automatically.
 
-## Next
+## Status
 
-The engine comes first and everything else waits on the review. After that,
-in order: the calculator interface with the madhhab selector and per-country
-legal notes, then the blog system with its validation baked into the publish
-path, then the trust pages, then one locale at a time with articles written
-for that audience rather than machine-translated.
+The engine, the site, the installer and the tests are done. The fiqh review is
+not, and nothing should be promoted until it is. See
+[docs/REVIEW-CHECKLIST.md](docs/REVIEW-CHECKLIST.md).

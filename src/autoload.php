@@ -3,21 +3,30 @@
 declare(strict_types=1);
 
 /**
- * Dependency-free PSR-4 autoloader for the Faraid namespace.
+ * Dependency-free PSR-4 autoloader.
  *
- * The engine must be usable, and its tests runnable, on a plain PHP host with
- * no Composer install. Where Composer is available, use vendor/autoload.php
- * instead; the two are interchangeable.
+ * The site must run on a plain PHP host with no Composer install — upload the
+ * files and it works. Where Composer is available, vendor/autoload.php does
+ * the same job and the two are interchangeable.
  */
 spl_autoload_register(static function (string $class): void {
-    $prefix = 'Faraid\\';
-    if (!str_starts_with($class, $prefix)) {
+    static $prefixes = [
+        'Faraid\\' => __DIR__ . '/Faraid/',
+        'App\\' => __DIR__ . '/App/',
+    ];
+
+    foreach ($prefixes as $prefix => $directory) {
+        if (!str_starts_with($class, $prefix)) {
+            continue;
+        }
+
+        $path = $directory . str_replace('\\', '/', substr($class, strlen($prefix))) . '.php';
+        if (is_file($path)) {
+            require $path;
+        }
+
         return;
     }
-
-    $relative = substr($class, strlen($prefix));
-    $path = __DIR__ . '/Faraid/' . str_replace('\\', '/', $relative) . '.php';
-    if (is_file($path)) {
-        require $path;
-    }
 });
+
+require_once __DIR__ . '/App/helpers.php';
