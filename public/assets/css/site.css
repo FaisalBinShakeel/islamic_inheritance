@@ -46,6 +46,14 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/*
+ * The hidden attribute has to beat every component display rule. Without
+ * this, `display: grid` on a block quietly wins and something the page has
+ * hidden stays on screen — which is how the installer showed its MySQL
+ * fields while SQLite was selected.
+ */
+[hidden] { display: none !important; }
+
 html { -webkit-text-size-adjust: 100%; }
 
 body {
