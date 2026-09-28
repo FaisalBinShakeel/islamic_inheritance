@@ -104,7 +104,7 @@ final class Seeder
             '{{site_name}}' => Config::siteName(),
         ]);
 
-        PostRepository::save([
+        $postId = PostRepository::save([
             'slug' => $slug,
             'locale' => $locale,
             'title' => $title,
@@ -122,6 +122,29 @@ final class Seeder
             'reading_minutes' => Str::readingMinutes($body),
             'published_at' => Database::now(),
         ]);
+
+        self::tags($postId, (array) ($content['tags'] ?? []), $locale);
+    }
+
+    /** Attach a post's tags, creating any that do not exist yet. */
+    private static function tags(int $postId, array $names, string $locale): void
+    {
+        Database::run('DELETE FROM post_tags WHERE post_id = ?', [$postId]);
+
+        foreach ($names as $name) {
+            $name = trim((string) $name);
+            if ($name === '') {
+                continue;
+            }
+
+            $slug = Str::slug($name);
+            $existing = Database::first('SELECT id FROM tags WHERE slug = ? AND locale = ?', [$slug, $locale]);
+            $tagId = $existing !== null
+                ? (int) $existing['id']
+                : Database::insert('INSERT INTO tags (slug, locale, name) VALUES (?, ?, ?)', [$slug, $locale, $name]);
+
+            Database::run('INSERT INTO post_tags (post_id, tag_id) VALUES (?, ?)', [$postId, $tagId]);
+        }
     }
 
     /** @return list<string> */

@@ -5,6 +5,7 @@ return [
     'category' => 'wills',
     'translation_group' => 'will-usa',
     'target_keyword' => 'islamic will usa',
+    'tags' => ['Islamic wills'],
     'title' => 'Islamic wills in the United States',
     'h1' => 'Islamic wills in the United States: intestacy, elective share, and what to do',
     'meta_description' => 'US intestacy law, not Faraid, divides an estate when there is no will, and a spousal elective share can override one. What an Islamic will must deal with.',

@@ -5,6 +5,7 @@ return [
     'category' => 'doctrines',
     'translation_group' => 'awl-radd',
     'target_keyword' => 'awl and radd explained',
+    'tags' => ['Awl and radd', 'Worked examples'],
     'title' => 'Awl and radd explained',
     'h1' => 'Awl and radd, explained with worked examples',
     'meta_description' => 'What happens when Islamic inheritance shares add up to more or less than the estate: awl raises the denominator, radd returns the surplus. With examples.',

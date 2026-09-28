@@ -141,6 +141,9 @@ final class PostValidator
         if (str_starts_with($rest, 'assets/')) {
             return is_file(dirname(__DIR__, 2) . '/public/' . $rest);
         }
+        if (str_starts_with($rest, 'blog/tag/')) {
+            return PostRepository::tag(substr($rest, strlen('blog/tag/')), $locale) !== null;
+        }
         if (str_starts_with($rest, 'blog/category/')) {
             return PostRepository::category(substr($rest, strlen('blog/category/')), $locale) !== null;
         }

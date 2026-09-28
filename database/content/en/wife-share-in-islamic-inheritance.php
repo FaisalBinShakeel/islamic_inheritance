@@ -5,6 +5,7 @@ return [
     'category' => 'shares',
     'translation_group' => 'wife-share',
     'target_keyword' => 'wife share in islamic inheritance',
+    'tags' => ['Widows', 'Worked examples'],
     'title' => "A wife's share in Islamic inheritance",
     'h1' => "A wife's share in Islamic inheritance",
     'meta_description' => "A wife inherits one quarter, or one eighth if there are children, and co-wives divide a single share. Worked examples, and why radd never reaches a spouse.",

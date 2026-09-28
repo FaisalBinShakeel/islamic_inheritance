@@ -5,6 +5,7 @@ return [
     'category' => 'doctrines',
     'translation_group' => 'exclusion',
     'target_keyword' => 'who is excluded from islamic inheritance',
+    'tags' => ['Exclusion', 'Siblings'],
     'title' => 'Who is excluded from Islamic inheritance',
     'h1' => 'Who is excluded from Islamic inheritance, and by whom',
     'meta_description' => 'The rules of hajb: which relatives are removed from an estate entirely, which only have their share reduced, and the two outright disqualifications.',

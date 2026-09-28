@@ -5,6 +5,7 @@ return [
     'category' => 'basics',
     'translation_group' => 'faraid-explained',
     'target_keyword' => 'islamic inheritance law explained',
+    'tags' => ['Worked examples', 'The basics'],
     'title' => 'Islamic inheritance law explained',
     'h1' => 'Islamic inheritance law explained',
     'meta_description' => 'A complete plain-English guide to Faraid: the order of deductions, the six fixed shares, who is excluded, and a fully worked example.',

@@ -106,6 +106,32 @@ final class CalculatorController
         ];
     }
 
+    /**
+     * Record an interface event the page reports — today, only that someone
+     * pressed the WhatsApp share button. Knowing whether people actually pass
+     * a result on is the difference between a calculator and a tool a family
+     * uses together.
+     *
+     * Accepts nothing from the page but a name from a fixed list, so this
+     * endpoint cannot be used to write arbitrary rows.
+     */
+    public function recordInterfaceEvent(array $form): Response
+    {
+        $allowed = ['whatsapp_share', 'copied_result', 'printed_result'];
+        $event = (string) ($form['event'] ?? '');
+
+        if (!in_array($event, $allowed, true)) {
+            return Response::json(['ok' => false], 400);
+        }
+
+        $this->recordEvent($event, [
+            'madhhab' => (string) ($form['madhhab'] ?? ''),
+            'heirs' => [],
+        ]);
+
+        return Response::json(['ok' => true]);
+    }
+
     public function reportForm(?string $message = null, bool $sent = false): Response
     {
         $seo = (new Seo(Locale::path('report')))

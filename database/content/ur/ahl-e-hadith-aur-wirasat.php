@@ -5,6 +5,7 @@ return [
     'category' => 'doctrines',
     'translation_group' => 'ahl-e-hadith',
     'target_keyword' => 'ahl e hadith wirasat',
+    'tags' => ['مکاتبِ فکر'],
     'title' => 'اہلِ حدیث اور وراثت',
     'h1' => 'اہلِ حدیث اور وراثت: اصول، اور اختلاف کہاں ہے',
     'meta_description' => 'جو حضرات تقلید نہیں کرتے وہ وراثت میں کس اصول پر چلتے ہیں، جواب کہاں بدلتا ہے، اور اس کیلکولیٹر نے کس چیز کی تصدیق نہیں کی۔',

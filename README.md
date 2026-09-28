@@ -58,12 +58,15 @@ anyone should trust its output.
   share, who was excluded and by whom, what each other position says, a print
   stylesheet that produces a clean A4 page, copy-as-text and a WhatsApp share
   button.
-- **Guides**, with categories, tags, authors, table of contents, breadcrumbs
-  and related posts.
+- **A guide library of 38 pages** across English and Urdu — the basics, each
+  heir's share, the doctrines, the schools, and the Islamic-will cluster for
+  the UK, US, Canada and Australia — with categories, tag archives, authors,
+  tables of contents, breadcrumbs and related posts.
 - **English and Urdu** at launch, English at the root and every other language
   in a subfolder, with reciprocal hreflang and full RTL.
-- **Admin**: posts, CSV import with a dry run, an error-report inbox, and an
-  audit page.
+- **Admin**: posts with deletion, CSV import with a dry run, an error-report
+  inbox, a keyword register, and an audit page that re-runs every publish rule
+  across the whole site.
 - **Report an error** form, because a calculator that quietly carries a wrong
   rule does real harm.
 
@@ -81,15 +84,16 @@ Not a checklist — these are structural:
 | No two posts chase one keyword | Unique index on (locale, target keyword) |
 
 Plus JSON-LD per page type (WebApplication, FAQPage, Article, BreadcrumbList,
-Blog, Organization), a generated `sitemap.xml` with real `lastmod` values, and
-`robots.txt`.
+Blog, Organization), a generated `sitemap.xml` that includes the category and
+tag archives with real `lastmod` values, and `robots.txt`. A test fetches every
+URL the sitemap advertises and fails if any of them is not a 200.
 
 ## Running the tests
 
 No dependencies needed:
 
 ```bash
-php bin/run-tests.php            # 117 sourced engine cases
+php bin/run-tests.php            # 123 sourced engine cases
 php bin/run-tests.php --verbose  # list each case
 php bin/fuzz.php 20000           # random heir combinations
 php bin/calculate.php '{"madhhab":"hanafi","deceased_gender":"male","heirs":{"wives":1,"sons":2,"daughters":3}}'
@@ -102,7 +106,7 @@ composer install
 ./vendor/bin/phpunit
 ```
 
-305 tests. The site tests install a throwaway copy of the whole site into a
+336 tests. The site tests install a throwaway copy of the whole site into a
 temporary SQLite file and fetch every published URL through the real kernel,
 checking the invariants in the table above.
 

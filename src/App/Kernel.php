@@ -68,12 +68,14 @@ final class Kernel
         $router->get('/', static fn () => $calculator->index());
         $router->post('/', static fn () => $calculator->index($post, true));
         $router->post('/api/calculate', static fn () => $calculator->api($post));
+        $router->post('/api/event', static fn () => $calculator->recordInterfaceEvent($post));
 
         $router->get('/report', static fn () => $calculator->reportForm());
         $router->post('/report', static fn () => $calculator->submitReport($post));
 
         $router->get('/blog', static fn () => $blog->index((int) ($query['page'] ?? 1)));
         $router->get('/blog/category/{slug}', static fn (string $slug) => $blog->category($slug));
+        $router->get('/blog/tag/{slug}', static fn (string $slug) => $blog->tag($slug));
         $router->get('/blog/{slug}', static fn (string $slug) => $blog->show($slug));
 
         foreach (self::TRUST_PAGES as $slug) {
@@ -96,6 +98,8 @@ final class Kernel
         $router->post('/admin/import', static fn () => $admin->import($post, $_FILES['file'] ?? null));
         $router->get('/admin/reports', static fn () => $admin->reports());
         $router->get('/admin/audit', static fn () => $admin->audit());
+        $router->get('/admin/keywords', static fn () => $admin->keywords());
+        $router->post('/admin/posts/{id}/delete', static fn (string $id) => $admin->delete((int) $id, $post));
 
         return $router;
     }

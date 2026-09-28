@@ -164,6 +164,46 @@ final class AdminController
         return Response::redirect('/admin/posts/' . $newId . '?saved=1');
     }
 
+    public function delete(int $id, array $form): Response
+    {
+        if (($guard = $this->guard()) !== null) {
+            return $guard;
+        }
+        if (!Csrf::check($form['_token'] ?? null)) {
+            return Response::redirect('/admin/posts/' . $id);
+        }
+
+        $post = PostRepository::findById($id);
+        if ($post === null) {
+            return (new PageController())->notFound();
+        }
+
+        // A published slug that disappears leaves dead links behind it, so
+        // the audit page is where the damage will show up. Say so rather than
+        // letting it be discovered later.
+        PostRepository::delete($id);
+
+        return Response::redirect('/admin/posts?deleted=' . rawurlencode((string) $post['slug']));
+    }
+
+    /**
+     * The keyword register.
+     *
+     * The database already refuses two posts the same primary phrase in one
+     * locale. This is the half a person needs: what is already claimed,
+     * before writing the next piece.
+     */
+    public function keywords(): Response
+    {
+        if (($guard = $this->guard()) !== null) {
+            return $guard;
+        }
+
+        return $this->render('admin/keywords', 'Keyword register', [
+            'rows' => PostRepository::keywordRegister(),
+        ]);
+    }
+
     public function importForm(array $result = [], ?string $error = null): Response
     {
         if (($guard = $this->guard()) !== null) {

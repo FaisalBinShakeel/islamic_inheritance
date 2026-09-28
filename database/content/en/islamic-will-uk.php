@@ -5,6 +5,7 @@ return [
     'category' => 'wills',
     'translation_group' => 'will-uk',
     'target_keyword' => 'islamic will uk',
+    'tags' => ['Islamic wills'],
     'title' => 'Islamic wills in the UK',
     'h1' => 'Islamic wills in the UK: why calculating your shares is only half the job',
     'meta_description' => 'In England and Wales, Islamic shares apply only if you leave a valid will. Without one, intestacy rules decide. What that means, and what to do about it.',

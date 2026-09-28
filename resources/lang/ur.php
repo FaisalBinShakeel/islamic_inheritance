@@ -257,6 +257,7 @@ return [
     'ui.blog.updated' => 'تازہ کاری',
     'ui.blog.by' => 'تحریر',
     'ui.blog.contents' => 'اس صفحے میں',
+    'ui.blog.tag.intro' => ':tag سے متعلق مضامین۔',
     'ui.blog.category' => 'زمرہ',
     'ui.blog.related' => 'متعلقہ مضامین',
     'ui.blog.empty' => 'ابھی کوئی مضمون شائع نہیں ہوا۔',

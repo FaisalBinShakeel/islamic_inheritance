@@ -79,10 +79,36 @@
         timer = window.setTimeout(calculate, 250);
     }
 
+    // Whether a result actually gets passed on to the family is the most
+    // useful thing this page can tell us, and it needs no identifiers to
+    // answer — just a count.
+    function report(name) {
+        var school = form.querySelector('[name="madhhab"]');
+        var body = new FormData();
+        body.append('event', name);
+        body.append('madhhab', school ? school.value : '');
+
+        if (navigator.sendBeacon) {
+            navigator.sendBeacon(form.getAttribute('data-event-endpoint') || '/api/event', body);
+            return;
+        }
+        fetch(form.getAttribute('data-event-endpoint') || '/api/event', {
+            method: 'POST', body: body, keepalive: true
+        }).catch(function () { /* never let counting break the page */ });
+    }
+
     function bindResultButtons() {
         var printButton = target.querySelector('[data-print]');
         if (printButton) {
-            printButton.addEventListener('click', function () { window.print(); });
+            printButton.addEventListener('click', function () {
+                report('printed_result');
+                window.print();
+            });
+        }
+
+        var shareLink = target.querySelector('[data-whatsapp]');
+        if (shareLink) {
+            shareLink.addEventListener('click', function () { report('whatsapp_share'); });
         }
 
         var copyButton = target.querySelector('[data-copy]');
@@ -95,6 +121,7 @@
                     copyButton.textContent = copyButton.getAttribute('data-copied') || 'Copied';
                     window.setTimeout(function () { copyButton.textContent = original; }, 1800);
                 };
+                report('copied_result');
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(source, done); });
                 } else {

@@ -169,12 +169,67 @@ final class PostRepository
         );
     }
 
+    /** Tags that actually have a published post behind them. @return list<array<string,mixed>> */
+    public static function tagsWithPosts(?string $locale = null): array
+    {
+        return Database::all(
+            'SELECT t.*, COUNT(pt.post_id) AS post_count
+             FROM tags t
+             INNER JOIN post_tags pt ON pt.tag_id = t.id
+             INNER JOIN posts p ON p.id = pt.post_id
+             WHERE t.locale = ? AND p.status = ? AND p.published_at <= ?
+             GROUP BY t.id ORDER BY post_count DESC, t.name',
+            [$locale ?? Locale::active(), 'published', Database::now()]
+        );
+    }
+
     /** @return list<array<string,mixed>> */
     public static function tagsFor(int $postId): array
     {
         return Database::all(
             'SELECT t.* FROM tags t INNER JOIN post_tags pt ON pt.tag_id = t.id WHERE pt.post_id = ? ORDER BY t.name',
             [$postId]
+        );
+    }
+
+    public static function tag(string $slug, ?string $locale = null): ?array
+    {
+        return Database::first(
+            'SELECT * FROM tags WHERE slug = ? AND locale = ? LIMIT 1',
+            [$slug, $locale ?? Locale::active()]
+        );
+    }
+
+    /** @return list<array<string,mixed>> */
+    public static function publishedByTag(string $slug, ?string $locale = null, int $limit = 50): array
+    {
+        return Database::all(
+            self::SELECT . ' INNER JOIN post_tags pt ON pt.post_id = p.id
+                 INNER JOIN tags t ON t.id = pt.tag_id
+                 WHERE t.slug = ? AND p.locale = ? AND p.status = ? AND p.published_at <= ?
+                 ORDER BY p.published_at DESC LIMIT ' . max(1, $limit),
+            [$slug, $locale ?? Locale::active(), 'published', Database::now()]
+        );
+    }
+
+    /**
+     * The keyword register: which phrase each published post is chasing.
+     *
+     * The database already refuses two posts the same keyword in one locale.
+     * This is the other half — seeing at a glance what is already claimed
+     * before writing the next one.
+     *
+     * @return list<array<string,mixed>>
+     */
+    public static function keywordRegister(): array
+    {
+        return Database::all(
+            'SELECT p.id, p.slug, p.locale, p.title, p.status, p.target_keyword, p.published_at,
+                    c.name AS category_name
+             FROM posts p LEFT JOIN categories c ON c.id = p.category_id
+             WHERE c.slug IS NULL OR c.slug <> ?
+             ORDER BY p.locale, CASE WHEN p.target_keyword IS NULL THEN 1 ELSE 0 END, p.target_keyword',
+            [self::PAGE_CATEGORY]
         );
     }
 

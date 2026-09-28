@@ -5,6 +5,7 @@ return [
     'category' => 'shares',
     'translation_group' => 'daughter-share',
     'target_keyword' => 'daughter share in islamic inheritance',
+    'tags' => ['Daughters', 'Worked examples'],
     'title' => "A daughter's share in Islamic inheritance",
     'h1' => "A daughter's share in Islamic inheritance",
     'meta_description' => "How much a daughter inherits in Islam: one half, two thirds shared, or a residuary share beside her brothers — with four worked examples.",

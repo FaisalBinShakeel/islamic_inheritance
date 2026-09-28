@@ -23,6 +23,7 @@ use App\Csrf;
         <a href="/admin/posts/new">New</a>
         <a href="/admin/import">Import</a>
         <a href="/admin/audit">Audit</a>
+        <a href="/admin/keywords">Keywords</a>
         <a href="/admin/reports">Reports</a>
         <a href="/" style="margin-inline-start:auto">View site</a>
         <form method="post" action="/admin/logout" style="display:inline">

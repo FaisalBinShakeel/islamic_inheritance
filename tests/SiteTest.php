@@ -193,6 +193,53 @@ final class SiteTest extends TestCase
         self::assertDoesNotMatchRegularExpression('~<lastmod>1970~', $xml);
     }
 
+    /**
+     * Every URL the sitemap advertises has to exist. Submitting a sitemap
+     * full of 404s is worse than submitting none, and archives are generated
+     * rather than written by hand, so this is exactly where a stale entry
+     * would appear.
+     */
+    public function testEveryUrlInTheSitemapResolves(): void
+    {
+        $xml = Kernel::handle('GET', '/sitemap.xml', [], [])->body;
+        preg_match_all('~<loc>([^<]+)</loc>~', $xml, $matches);
+
+        self::assertNotEmpty($matches[1], 'the sitemap is empty');
+
+        $origin = \App\Config::origin();
+        $broken = [];
+
+        foreach ($matches[1] as $url) {
+            $path = str_starts_with($url, $origin) ? substr($url, strlen($origin)) : $url;
+            $status = Kernel::handle('GET', $path ?: '/', [], [])->status;
+            if ($status !== 200) {
+                $broken[] = $path . ' → ' . $status;
+            }
+        }
+
+        self::assertSame([], $broken);
+    }
+
+    public function testTagArchivesListTheirPostsAndRefuseEmptyOnes(): void
+    {
+        $response = Kernel::handle('GET', '/blog/tag/worked-examples', [], []);
+        self::assertSame(200, $response->status);
+        self::assertStringContainsString('Worked examples', $response->body);
+
+        // A tag with nothing behind it is a thin page, and a thin page
+        // indexed is worse than no page.
+        self::assertSame(404, Kernel::handle('GET', '/blog/tag/no-such-tag', [], [])->status);
+    }
+
+    public function testAdminPagesAreClosedToVisitors(): void
+    {
+        foreach (['/admin', '/admin/posts', '/admin/keywords', '/admin/audit', '/admin/import', '/admin/reports'] as $path) {
+            $response = Kernel::handle('GET', $path, [], []);
+            self::assertSame(302, $response->status, $path . ' is not guarded');
+            self::assertSame('/admin/login', $response->headers['Location'] ?? '', $path);
+        }
+    }
+
     public function testRobotsPointsAtTheSitemapAndBlocksTheAdmin(): void
     {
         $robots = Kernel::handle('GET', '/robots.txt', [], [])->body;

@@ -5,6 +5,7 @@ return [
     'category' => 'basics',
     'translation_group' => 'how-divided',
     'target_keyword' => 'wirasat ki taqseem',
+    'tags' => ['بنیادی باتیں', 'حل شدہ مثالیں'],
     'title' => 'وراثت کی تقسیم کیسے ہوتی ہے',
     'h1' => 'وراثت کی تقسیم قدم بہ قدم',
     'meta_description' => 'اسلامی وراثت کی تقسیم کا عملی طریقہ: کٹوتیاں، محرومی، مقررہ حصے، عصبہ اور عول — مکمل حل شدہ مثال کے ساتھ۔',

@@ -38,6 +38,40 @@ final class FeedController
             $entries[] = $entry + ['priority' => '0.7', 'changefreq' => 'monthly'];
         }
 
+        // Category and tag archives are real pages people land on, so they
+        // belong in the sitemap. An archive with nothing behind it does not
+        // exist — the controller returns 404 for those — so only archives
+        // with published posts are listed here.
+        $lastmod = PostRepository::lastUpdated() ?? gmdate('Y-m-d H:i:s');
+        $active = Locale::active();
+
+        foreach (Locale::enabled() as $locale) {
+            Locale::setActive($locale);
+
+            foreach (PostRepository::categories($locale) as $category) {
+                if ((int) ($category['post_count'] ?? 0) === 0) {
+                    continue;
+                }
+                $entries[] = [
+                    'loc' => Locale::path('blog/category/' . $category['slug'], $locale),
+                    'lastmod' => $lastmod,
+                    'priority' => '0.5',
+                    'changefreq' => 'monthly',
+                ];
+            }
+
+            foreach (PostRepository::tagsWithPosts($locale) as $tag) {
+                $entries[] = [
+                    'loc' => Locale::path('blog/tag/' . $tag['slug'], $locale),
+                    'lastmod' => $lastmod,
+                    'priority' => '0.4',
+                    'changefreq' => 'monthly',
+                ];
+            }
+        }
+
+        Locale::setActive($active);
+
         $xml = ['<?xml version="1.0" encoding="UTF-8"?>'];
         $xml[] = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
         foreach ($entries as $entry) {

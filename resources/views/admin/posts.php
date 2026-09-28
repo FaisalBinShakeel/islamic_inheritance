@@ -7,6 +7,13 @@
     <?php endforeach; ?>
 </p>
 
+<?php if (isset($_GET['deleted'])): ?>
+    <p class="alert alert--ok" role="status">
+        Deleted <code><?= e((string) $_GET['deleted']) ?></code>. Check the
+        <a href="/admin/audit">audit page</a> for links that now point nowhere.
+    </p>
+<?php endif; ?>
+
 <table class="admin-table">
     <thead><tr><th>Title</th><th>Slug</th><th>Locale</th><th>Category</th><th>Keyword</th><th>Status</th></tr></thead>
     <tbody>

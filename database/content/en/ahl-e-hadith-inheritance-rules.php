@@ -5,6 +5,7 @@ return [
     'category' => 'doctrines',
     'translation_group' => 'ahl-e-hadith',
     'target_keyword' => 'ahl e hadith inheritance rules',
+    'tags' => ['Schools of law'],
     'title' => 'Ahl-e-Hadith and inheritance',
     'h1' => 'Ahl-e-Hadith and inheritance: the method, and where it differs',
     'meta_description' => 'How those who do not follow a school taqlidan approach inheritance, the few points where the answer changes, and what this calculator has not yet verified.',

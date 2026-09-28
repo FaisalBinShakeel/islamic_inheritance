@@ -5,6 +5,7 @@ return [
     'category' => 'basics',
     'translation_group' => 'how-divided',
     'target_keyword' => 'how is inheritance divided in islam',
+    'tags' => ['Worked examples', 'The basics'],
     'title' => 'How inheritance is divided in Islam',
     'h1' => 'How inheritance is divided in Islam, step by step',
     'meta_description' => 'A step-by-step method for dividing an estate under Islamic law, with a worked example you can follow with your own family on paper.',

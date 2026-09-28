@@ -75,6 +75,40 @@ final class BlogController
         ], $seo));
     }
 
+    public function tag(string $slug): ?Response
+    {
+        $tag = PostRepository::tag($slug);
+        if ($tag === null) {
+            return null;
+        }
+
+        $posts = PostRepository::publishedByTag($slug);
+        if ($posts === []) {
+            // An empty archive is a thin page, and a thin page indexed is
+            // worse than no page.
+            return null;
+        }
+
+        $path = Locale::path('blog/tag/' . $slug);
+
+        $seo = (new Seo($path))
+            ->title((string) $tag['name'])
+            ->description(t('ui.blog.tag.intro', ['tag' => (string) $tag['name']]))
+            ->breadcrumbs([
+                ['name' => t('ui.breadcrumb.home'), 'path' => Locale::path()],
+                ['name' => t('ui.blog.index'), 'path' => Locale::path('blog')],
+                ['name' => (string) $tag['name'], 'path' => $path],
+            ]);
+
+        return Response::html(View::page('blog/index', [
+            'posts' => $posts,
+            'categories' => PostRepository::categories(),
+            'page' => 1,
+            'pages' => 1,
+            'intro' => t('ui.blog.tag.intro', ['tag' => (string) $tag['name']]),
+        ], $seo));
+    }
+
     public function show(string $slug): ?Response
     {
         $post = PostRepository::findBySlug($slug);

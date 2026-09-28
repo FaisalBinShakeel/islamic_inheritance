@@ -123,6 +123,18 @@ $action = $id !== null ? '/admin/posts/' . $id : '/admin/posts';
     </div>
 </form>
 
+<?php if ($id !== null): ?>
+<form method="post" action="/admin/posts/<?= (int) $id ?>/delete" class="card" style="margin-top:1rem"
+      onsubmit="return confirm('Delete this post? Any link to it elsewhere on the site will break, and the audit page will start reporting it.');">
+    <?= Csrf::field() ?>
+    <p class="hint" style="margin:0 0 .6rem">
+        Deleting a published post leaves dead links behind wherever it was linked from.
+        Check the audit page afterwards.
+    </p>
+    <button type="submit" class="btn btn--ghost btn--small">Delete this post</button>
+</form>
+<?php endif; ?>
+
 <script>
 (function () {
     var title = document.getElementById('title');

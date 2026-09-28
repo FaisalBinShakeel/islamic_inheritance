@@ -21,7 +21,8 @@ $jurisdiction = (string) $v('jurisdiction', 'classical');
 
 <div class="calc">
     <form class="calc__form" method="post" action="<?= e(lp()) ?>" id="calc-form"
-          data-endpoint="<?= e(lp('api/calculate')) ?>" novalidate>
+          data-endpoint="<?= e(lp('api/calculate')) ?>"
+          data-event-endpoint="<?= e(lp('api/event')) ?>" novalidate>
         <?php if (!empty($error)): ?>
             <p class="alert" role="alert"><?= e($error) ?></p>
         <?php endif; ?>

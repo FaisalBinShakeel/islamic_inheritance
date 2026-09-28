@@ -5,6 +5,7 @@ return [
     'category' => 'shares',
     'translation_group' => 'daughter-share',
     'target_keyword' => 'beti ka meeras mein hissa',
+    'tags' => ['بیٹیاں', 'حل شدہ مثالیں'],
     'title' => 'بیٹی کا میراث میں حصہ',
     'h1' => 'بیٹی کا میراث میں حصہ کتنا ہے',
     'meta_description' => 'بیٹی کو کتنا ملتا ہے: نصف، دو تہائی مشترکہ، یا بھائیوں کے ساتھ عصبہ — چار حل شدہ مثالوں کے ساتھ۔',

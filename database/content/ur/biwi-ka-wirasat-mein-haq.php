@@ -5,6 +5,7 @@ return [
     'category' => 'shares',
     'translation_group' => 'wife-share',
     'target_keyword' => 'biwi ka wirasat mein haq',
+    'tags' => ['بیوہ', 'حل شدہ مثالیں'],
     'title' => 'بیوی کا وراثت میں حق',
     'h1' => 'بیوی کا وراثت میں حق کتنا ہے',
     'meta_description' => 'بیوی کو چوتھائی ملتا ہے، اولاد ہو تو آٹھواں — اور سب بیویاں مل کر ایک ہی حصہ لیتی ہیں۔ مثالوں کے ساتھ، اور رد بیوہ تک کیوں نہیں پہنچتا۔',

@@ -261,6 +261,7 @@ return [
     'ui.blog.updated' => 'Updated',
     'ui.blog.by' => 'By',
     'ui.blog.contents' => 'On this page',
+    'ui.blog.tag.intro' => 'Guides tagged :tag.',
     'ui.blog.category' => 'Category',
     'ui.blog.related' => 'Related guides',
     'ui.blog.empty' => 'No guides have been published yet.',
