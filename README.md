@@ -29,9 +29,15 @@ A pure PHP class: an array in, a result out. No database, no HTTP, no session,
 no clock — which is what makes it testable, and testability is the only reason
 anyone should trust its output.
 
-- All four Sunni schools from **one** shared engine, with a madhhab strategy
-  object overriding only the divergent rules. The school is required; the
-  engine never guesses one.
+- All four Sunni schools from **one** shared engine, plus an **Ahl-e-Hadith /
+  Ghair Muqallid** option for those who do not follow a school taqlidan, with a
+  strategy object overriding only the divergent rules. The position is
+  required; the engine never guesses one.
+- **Every result reports what each of the other positions produces** for the
+  same heirs, so the calculator states what each one holds rather than
+  presenting one figure as the answer. On ordinary estates it says plainly
+  that all five agree — which is worth as much to a family as showing the
+  differences in the few cases where they do not.
 - **Exact integer fractions** throughout. No floating point, so no 0.333333
   drift on thirds and sixths.
 - The doctrines simple calculators get wrong: awl, radd, Umariyyatan,
@@ -49,8 +55,9 @@ anyone should trust its output.
 - **Calculator** on one URL, no login, no page reload. Works with JavaScript
   off — the form posts and the server renders the same result.
 - **Result as a document**: the heir table, a plain-language sentence for every
-  share, who was excluded and by whom, a print stylesheet that produces a
-  clean A4 page, copy-as-text and a WhatsApp share button.
+  share, who was excluded and by whom, what each other position says, a print
+  stylesheet that produces a clean A4 page, copy-as-text and a WhatsApp share
+  button.
 - **Guides**, with categories, tags, authors, table of contents, breadcrumbs
   and related posts.
 - **English and Urdu** at launch, English at the root and every other language
@@ -82,7 +89,7 @@ Blog, Organization), a generated `sitemap.xml` with real `lastmod` values, and
 No dependencies needed:
 
 ```bash
-php bin/run-tests.php            # 109 sourced engine cases
+php bin/run-tests.php            # 117 sourced engine cases
 php bin/run-tests.php --verbose  # list each case
 php bin/fuzz.php 20000           # random heir combinations
 php bin/calculate.php '{"madhhab":"hanafi","deceased_gender":"male","heirs":{"wives":1,"sons":2,"daughters":3}}'
@@ -95,7 +102,7 @@ composer install
 ./vendor/bin/phpunit
 ```
 
-276 tests. The site tests install a throwaway copy of the whole site into a
+305 tests. The site tests install a throwaway copy of the whole site into a
 temporary SQLite file and fetch every published URL through the real kernel,
 checking the invariants in the table above.
 
@@ -164,3 +171,10 @@ language switcher automatically.
 The engine, the site, the installer and the tests are done. The fiqh review is
 not, and nothing should be promoted until it is. See
 [docs/REVIEW-CHECKLIST.md](docs/REVIEW-CHECKLIST.md).
+
+The Ahl-e-Hadith option needs particular care: **none of its four
+distinguishing choices has been confirmed by anyone qualified in it**, and no
+fatwa is cited for any of them. The underlying disagreements between the
+Companions are well documented; which side contemporary scholarship of that
+orientation takes is what remains unverified. Every result under that option
+says so, and item 10 of the review checklist breaks it down point by point.
