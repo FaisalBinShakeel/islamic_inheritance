@@ -59,7 +59,8 @@ return [
 
 <h3>Where a spouse is the only heir</h3>
 <p>If a woman dies leaving only her husband, he takes his half — and classically the remaining half goes to the public treasury rather than to him. This calculator reports that remainder as undistributed instead of quietly assigning it, and says so on the result.</p>
-<p>The Hanafi school applies radd as described here. The Maliki and Shafi'i schools classically sent the surplus to the treasury, though modern practice in both commonly returns it. Which to present as the default is one of the open questions on the <a href="/methodology">methodology page</a>.</p>
+<p>The Hanafi and Hanbali schools apply radd as described here. <strong>The Maliki and Shafi'i schools do not.</strong> In those two the surplus goes to the public treasury and nobody receives more than their allotted share — Ibn Qudamah names Malik and al-Shafi'i alongside Zayd b. Thabit on exactly this point. So in the case above, a Shafi'i result gives the mother her sixth, the daughter her half, and reports the remaining third as undistributed.</p>
+<p>This calculator used to apply radd in all four schools, on the reasoning that modern practice often does. That was reporting a practice under a school's name while the school's own position was the opposite, and it has been corrected. Choose your school on the <a href="/">calculator</a> and the comparison table will show you both outcomes side by side.</p>
 
 <h2>Why the arithmetic has to be exact</h2>
 <p>Both remedies produce denominators like 27 and 32, and both involve thirds and sixths. A calculator working in decimals turns 1/3 into 0.333333 and loses a fraction of the estate somewhere in the rounding. This one works entirely in exact fractions and refuses to return a result whose shares do not sum to precisely one.</p>

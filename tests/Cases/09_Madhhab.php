@@ -133,6 +133,42 @@ return [
         ],
     ],
     [
+        'id' => 'shafii_surplus_goes_to_the_treasury_not_the_heirs',
+        'title' => "Shafi'i: the surplus is not returned to the heirs",
+        'group' => 'madhhab',
+        'source' => 'Ibn Qudamah, al-Mughni 6/186, quoted at islamqa.info/en/answers/160948: Zayd b. Thabit held that what is left over goes to the bayt al-mal and no one is given more than his allotted share, and this was also the view of Malik, al-Awzai and al-Shafii. CORRECTED: this engine previously applied radd here.',
+        'input' => $male + ['madhhab' => 'shafii', 'heirs' => ['mother' => true, 'daughters' => 1]],
+        'expect' => [
+            'shares' => ['mother' => '1/6', 'daughter' => '1/2'],
+            'undistributed' => '1/3',
+            'radd' => false,
+            'warnings' => ['surplus_to_bayt_al_mal_no_radd'],
+        ],
+    ],
+    [
+        'id' => 'maliki_surplus_goes_to_the_treasury_not_the_heirs',
+        'title' => 'Maliki: the surplus is not returned to the heirs',
+        'group' => 'madhhab',
+        'source' => 'Same source as the case above; Malik is named there alongside Zayd b. Thabit and al-Shafii.',
+        'input' => $male + ['madhhab' => 'maliki', 'heirs' => ['mother' => true, 'daughters' => 1]],
+        'expect' => [
+            'shares' => ['mother' => '1/6', 'daughter' => '1/2'],
+            'undistributed' => '1/3',
+            'radd' => false,
+        ],
+    ],
+    [
+        'id' => 'hanbali_returns_the_surplus_to_the_heirs',
+        'title' => 'Hanbali: the surplus is returned, as in the Hanafi school',
+        'group' => 'madhhab',
+        'source' => 'Ibn Qudamah, al-Mughni 6/186: what is left over is given to the fixed-share heirs on the same basis as their allotted shares, except a husband or wife; narrated from Umar, Ali, Ibn Masud and Ibn Abbas. Quoted at islamqa.info/en/answers/160948.',
+        'input' => $male + ['madhhab' => 'hanbali', 'heirs' => ['mother' => true, 'daughters' => 1]],
+        'expect' => [
+            'shares' => ['mother' => '1/4', 'daughter' => '3/4'],
+            'radd' => true,
+        ],
+    ],
+    [
         'id' => 'madhhab_must_be_supplied',
         'title' => 'The engine refuses to guess a school',
         'group' => 'madhhab',

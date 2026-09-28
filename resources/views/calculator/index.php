@@ -119,6 +119,16 @@ $jurisdiction = (string) $v('jurisdiction', 'classical');
             <summary><?= e(t('ui.predeceased')) ?></summary>
             <div>
                 <p class="hint"><?= e(t('ui.predeceased.help')) ?></p>
+
+                <label id="constr-label"><?= e(t('ui.jurisdiction.construction')) ?></label>
+                <div class="choice" role="radiogroup" aria-labelledby="constr-label">
+                    <input type="radio" id="c-settled" name="mflo_construction" value="settled" <?= $v('mflo_construction', 'settled') !== 'textual' ? 'checked' : '' ?>>
+                    <label for="c-settled"><?= e(t('ui.jurisdiction.construction.settled')) ?></label>
+                    <input type="radio" id="c-textual" name="mflo_construction" value="textual" <?= $v('mflo_construction', 'settled') === 'textual' ? 'checked' : '' ?>>
+                    <label for="c-textual"><?= e(t('ui.jurisdiction.construction.textual')) ?></label>
+                </div>
+                <p class="hint"><?= e(t('ui.jurisdiction.construction.help')) ?></p>
+
                 <div id="predeceased-rows"></div>
                 <button type="button" class="btn btn--ghost btn--small" id="add-predeceased"><?= e(t('ui.predeceased.add')) ?></button>
             </div>
@@ -184,19 +194,27 @@ $jurisdiction = (string) $v('jurisdiction', 'classical');
         <div class="grid">
             <div class="field">
                 <label><?= e(t('ui.predeceased.gender')) ?></label>
-                <select name="predeceased_gender[]">
+                <select name="predeceased_gender[__row__]">
                     <option value="male"><?= e(t('heir.son')) ?></option>
                     <option value="female"><?= e(t('heir.daughter')) ?></option>
                 </select>
             </div>
             <div class="field">
                 <label><?= e(t('ui.predeceased.sons')) ?></label>
-                <input type="number" min="0" max="50" step="1" name="predeceased_sons[]" value="0">
+                <input type="number" min="0" max="50" step="1" name="predeceased_sons[__row__]" value="0">
             </div>
             <div class="field">
                 <label><?= e(t('ui.predeceased.daughters')) ?></label>
-                <input type="number" min="0" max="50" step="1" name="predeceased_daughters[]" value="0">
+                <input type="number" min="0" max="50" step="1" name="predeceased_daughters[__row__]" value="0">
             </div>
+        </div>
+        <div class="switchrow">
+            <input type="checkbox" name="predeceased_spouse[__row__]" value="1">
+            <label><?= e(t('ui.predeceased.spouse')) ?></label>
+        </div>
+        <div class="switchrow">
+            <input type="checkbox" name="predeceased_mother[__row__]" value="1">
+            <label><?= e(t('ui.predeceased.mother')) ?></label>
         </div>
         <button type="button" class="btn btn--ghost btn--small" data-remove><?= e(t('ui.predeceased.remove')) ?></button>
     </div>

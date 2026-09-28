@@ -56,10 +56,13 @@ final class CalculatorRequest
 
         $jurisdiction = ($form['jurisdiction'] ?? 'classical') === 'mflo' ? 'mflo' : 'classical';
 
+        $construction = ($form['mflo_construction'] ?? 'settled') === 'textual' ? 'textual' : 'settled';
+
         $engine = [
             'madhhab' => trim((string) ($form['madhhab'] ?? '')),
             'deceased_gender' => $gender,
             'apply_mflo_1961' => $jurisdiction === 'mflo',
+            'mflo_construction' => $construction,
             'heirs' => $heirs,
         ];
 
@@ -85,6 +88,7 @@ final class CalculatorRequest
             'madhhab' => $engine['madhhab'],
             'deceased_gender' => $gender,
             'jurisdiction' => $jurisdiction,
+            'mflo_construction' => $construction,
             'estate_value' => $form['estate_value'] ?? '',
             'funeral' => $form['funeral'] ?? '',
             'debts' => $form['debts'] ?? '',
@@ -111,27 +115,43 @@ final class CalculatorRequest
         return mb_substr(implode(',', $parts), 0, 255);
     }
 
-    /** @return list<array{gender:string,sons:int,daughters:int}> */
+    /** @return list<array{gender:string,sons:int,daughters:int,heirs:array<string,int>}> */
     private static function predeceased(array $form): array
     {
         $genders = (array) ($form['predeceased_gender'] ?? []);
         $sons = (array) ($form['predeceased_sons'] ?? []);
         $daughters = (array) ($form['predeceased_daughters'] ?? []);
+        $spouses = (array) ($form['predeceased_spouse'] ?? []);
+        $mothers = (array) ($form['predeceased_mother'] ?? []);
 
         $children = [];
         foreach ($genders as $index => $gender) {
+            $gender = $gender === 'female' ? 'female' : 'male';
             $childSons = self::count($sons[$index] ?? 0);
             $childDaughters = self::count($daughters[$index] ?? 0);
-            if ($childSons + $childDaughters === 0) {
+
+            $own = [];
+            if (!empty($spouses[$index])) {
+                // A predeceased son leaves a widow; a predeceased daughter, a
+                // husband. One checkbox, read against that child's sex.
+                $own[$gender === 'male' ? 'wives' : 'husband'] = 1;
+            }
+            if (!empty($mothers[$index])) {
+                $own['mother'] = 1;
+            }
+
+            if ($childSons + $childDaughters + count($own) === 0) {
                 // A predeceased child with nobody to represent is dropped
                 // quietly here rather than raised as an error while the user
                 // is still filling the row in.
                 continue;
             }
+
             $children[] = [
-                'gender' => $gender === 'female' ? 'female' : 'male',
+                'gender' => $gender,
                 'sons' => $childSons,
                 'daughters' => $childDaughters,
+                'heirs' => $own,
             ];
         }
 

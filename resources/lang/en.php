@@ -171,7 +171,7 @@ return [
     'warning.madhhab_hanafi_grandfather_excludes_siblings' => "Hanafi: the father's father excludes the brothers and sisters. The other three schools let them share with him.",
     'warning.madhhab_hanafi_radd_excludes_spouse' => 'Hanafi: a surplus is returned to the heirs, but never to a spouse.',
     'warning.madhhab_grandfather_shares_with_siblings' => "In this school the father's father shares the residue with the brothers rather than excluding them.",
-    'warning.madhhab_radd_modern_practice_not_classical' => 'Classically this school sends a surplus to the public treasury rather than returning it to the heirs. This calculator follows modern practice and returns it. Confirm with a scholar of this school.',
+    'warning.madhhab_surplus_to_bayt_al_mal' => 'In this school a surplus is not returned to the heirs. It goes to the public treasury, and nobody receives more than their allotted share. Where no functioning treasury exists, ask a scholar what should happen to the remainder.',
     'warning.madhhab_hanbali_mushtaraka_under_review' => 'The treatment of al-Mushtaraka in this school is an open question in this calculator and is under review. See the Methodology page.',
 
     // -------------------------------------------------------- calculator
@@ -306,8 +306,22 @@ return [
     'ui.madhhab.not_a_school' => 'Ahl-e-Hadith is not a fifth school, and its adherents would not call it one. It is offered here because people ask for it by name.',
     'warning.madhhab_ahl_e_hadith_not_verified' => 'This option follows the positions most commonly attributed to scholars who do not follow a school taqlidan. Those attributions have NOT been checked with anyone qualified in them, and no fatwa is being cited. Compare the columns below and confirm before acting.',
     'warning.madhhab_ahl_e_hadith_grandfather_excludes_siblings' => "Here the father's father is treated as standing in the father's place and excludes the brothers — the position reported from Abu Bakr and Ibn Abbas, as in the Hanafi school, rather than Zayd b. Thabit's sharing.",
-    'warning.madhhab_ahl_e_hadith_radd_may_reach_spouse' => 'Where a husband or wife is the only surviving heir, this option gives them the surplus rather than leaving it undistributed. The four schools in this calculator do not.',
     'warning.madhhab_ahl_e_hadith_awl_minority_view_not_applied' => "Awl is applied here as the majority applies it. Ibn Abbas rejected awl and would have placed the whole reduction on the daughters instead; that minority view is not built into this calculator.",
+
+    // ------------------------------------------------- MFLO 1961 section 4
+    'warning.mflo_settled_construction' => "Pakistani courts read section 4 as giving the predeceased child a notional share which then passes to all of that child's own heirs — their widow and mother included — not only to their children. This is the construction applied here (Kamal Khan v Mst. Zainab, endorsed by the Supreme Court in Mst. Zainab v Kamal Khan, PLD 1990 SC 1051).",
+    'warning.mflo_other_heirs_of_predeceased_child_not_entered' => "Only the predeceased child's own children were entered. If that child left a widow, a husband, or a surviving mother, they would also take a part of the notional share under the construction the courts apply. Add them to see the difference.",
+    'warning.mflo_textual_construction_no_children' => 'The words of section 4 give the share to the children of the predeceased child, and none were entered, so that portion is not distributed here.',
+    'warning.mflo_1961_repugnancy_appeal_pending' => 'Section 4 was held repugnant to the injunctions of Islam by the Federal Shariat Court in Allah Rakha v Federation of Pakistan, PLD 2000 SC 1. An appeal to the Shariat Appellate Bench of the Supreme Court is still pending, which suspends that declaration — so the section stands for now. Ask a Pakistani lawyer where the matter has reached.',
+    'ui.result.via' => 'through :who',
+    'ui.via.predeceased_son' => 'the son who died first (:n)',
+    'ui.via.predeceased_daughter' => 'the daughter who died first (:n)',
+    'ui.jurisdiction.construction' => 'How section 4 is read',
+    'ui.jurisdiction.construction.settled' => "As the courts apply it",
+    'ui.jurisdiction.construction.textual' => 'As the section is worded',
+    'ui.jurisdiction.construction.help' => "The courts give the predeceased child a notional share that passes to all of that child's heirs. The words of the section give it to their children alone. The two give different answers when that child left a widow or a surviving mother.",
+    'ui.predeceased.spouse' => 'Their widow or husband',
+    'ui.predeceased.mother' => 'Their mother, if she is alive',
 
     'ui.report.title' => 'Report a suspected error',
     'ui.report.body' => 'If you believe a share here is wrong, tell us. An inheritance calculator that quietly carries a wrong rule does real harm, so reports are read and acted on.',

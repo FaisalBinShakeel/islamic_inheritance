@@ -127,8 +127,17 @@
     var rows = document.getElementById('predeceased-rows');
     var template = document.getElementById('predeceased-template');
     if (addButton && rows && template) {
+        var nextRow = 0;
         addButton.addEventListener('click', function () {
-            rows.appendChild(template.content.cloneNode(true));
+            var fragment = template.content.cloneNode(true);
+            // Give the row its own index. An unchecked checkbox sends nothing,
+            // so without this a later row's answers would land on an earlier
+            // child.
+            var index = nextRow++;
+            Array.prototype.forEach.call(fragment.querySelectorAll('[name]'), function (field) {
+                field.name = field.name.replace('__row__', index);
+            });
+            rows.appendChild(fragment);
             schedule();
         });
         rows.addEventListener('click', function (event) {

@@ -75,14 +75,20 @@ final class AhlAlHadith extends MadhhabRules
 
     public function raddToSpouseWhenSoleHeir(): bool
     {
-        // Where a husband or wife is the only surviving heir, the surplus goes
-        // to them rather than being left undistributed. This rests on the
-        // practice reported from Uthman b. Affan, and is commonly cited today
-        // on the reasoning that there is no functioning bayt al-mal to receive
-        // it. The four schools in this calculator do not do this.
+        // CORRECTED. This returned true, on the report from Uthman b. Affan of
+        // giving left-over wealth to a husband.
         //
-        // PENDING VERIFICATION.
-        return true;
+        // Ibn Qudamah, al-Mughni 6/186: "With regard to the spouses, what is
+        // left over should not be given to them, according to the consensus of
+        // the scholars, but it was narrated from Uthman that he did give the
+        // left-over wealth to the husband, but perhaps he was a relative on the
+        // father's side or on the mother's side, so he gave that to him, or he
+        // gave it from the bayt al-mal and not by way of inheritance."
+        //
+        // So the one report the earlier position rested on is explained away
+        // by the same source, against a reported consensus. See
+        // docs/SOURCES-CONSULTED.md.
+        return false;
     }
 
     public function standingNotes(): array
@@ -90,7 +96,6 @@ final class AhlAlHadith extends MadhhabRules
         return [
             'madhhab_ahl_e_hadith_not_verified',
             'madhhab_ahl_e_hadith_grandfather_excludes_siblings',
-            'madhhab_ahl_e_hadith_radd_may_reach_spouse',
             'madhhab_ahl_e_hadith_awl_minority_view_not_applied',
         ];
     }

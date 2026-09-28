@@ -102,9 +102,15 @@ divide their third equally**, male and female alike.
 | Divergence | Hanafi | Shafi'i | Maliki | Hanbali | Ahl-e-Hadith |
 | --- | --- | --- | --- | --- | --- |
 | Grandfather with full or consanguine brothers | Excludes them (Abu Hanifa) | Zayd's doctrine: they share | Zayd's doctrine | Zayd's doctrine | Excludes them |
-| Mushtaraka | Full brothers take nothing | They share the third | They share the third | **Take nothing — open question** | Take nothing |
-| Radd | Applied, spouse excluded | Applied (modern practice; classically bayt al-mal) | Applied (modern practice; classically bayt al-mal) | Applied | Applied, and reaches a sole surviving spouse |
+| Mushtaraka | Full brothers take nothing | They share the third | They share the third | Take nothing | Take nothing |
+| Radd | Applied, spouse excluded | **Not applied — surplus to the treasury** | **Not applied — surplus to the treasury** | Applied, spouse excluded | Applied, spouse excluded |
 | Akdariyya | Does not arise | Arises | Arises | Arises | Does not arise |
+
+Two rows in this table were wrong until they were checked against Ibn
+Qudamah's *al-Mughni*: radd was being applied in the Maliki and Shafi'i
+schools, and the Ahl-e-Hadith option handed a sole surviving spouse the
+surplus. Both are corrected, and what was read and where is recorded in
+[SOURCES-CONSULTED.md](SOURCES-CONSULTED.md).
 
 ### Ahl-e-Hadith / Ghair Muqallid
 
@@ -115,18 +121,23 @@ returns false for it. It sits in the same strategy layer because that is where
 Inheritance is mostly explicit text, so this option produces exactly what all
 four schools produce on ordinary estates. It differs at four points:
 
-| Point | This option | Basis |
-| --- | --- | --- |
-| Grandfather with brothers | He excludes them | Reported from Abu Bakr and Ibn Abbas |
-| Mushtaraka | Full brothers take nothing | The view of Ali |
-| Radd where a spouse is the only heir | The surplus goes to the spouse | Commonly cited from Uthman |
-| Awl | Applied as the majority applies it | Ibn Abbas's rejection of awl is **not** implemented |
+| Point | This option | Basis | Checked? |
+| --- | --- | --- | --- |
+| Grandfather with brothers | He excludes them | Reported from Abu Bakr and Ibn Abbas | **No** |
+| Mushtaraka | Full brothers take nothing | The view of Ali | **No** |
+| Radd where a spouse is the only heir | The spouse takes no part in radd | Ibn Qudamah reports consensus; the report from Uthman is explained away | Yes |
+| Awl | Applied, as everyone applies it | Ibn Qudamah: nobody in his time held Ibn Abbas's view | Yes |
 
-**None of these attributions has been verified**, and no fatwa is cited for
-any of them. They are the positions most commonly attributed. Every result
-under this option says so on the page, and the four points are open questions
-in [REVIEW-CHECKLIST.md](REVIEW-CHECKLIST.md). See also the guide
-`ahl-e-hadith-inheritance-rules`, which sets out all sides.
+Two of these were checked against sources and one of them was **corrected** —
+this option previously gave a sole surviving spouse the whole estate. The other
+two attributions remain unverified, no fatwa is cited for them, and every
+result under this option says so on the page. See
+[SOURCES-CONSULTED.md](SOURCES-CONSULTED.md) and
+[REVIEW-CHECKLIST.md](REVIEW-CHECKLIST.md).
+
+**Consequence:** with the radd point corrected, this option now produces the
+same figures as Hanafi on every case in the test suite. A test asserts it, so
+changing either remaining choice will fail loudly rather than drift.
 
 Under **Zayd's doctrine** the grandfather takes whichever is best for him of:
 sharing with the brothers as though he were one of them (muqasama), one third
@@ -146,10 +157,31 @@ would have taken. Classical Hanafi rules would exclude them where a living son
 survives.
 
 It is off by default and exposed as an explicit toggle. When on, the engine
-treats each predeceased child as if alive, runs the ordinary calculation, then
-pays that child's individual portion down to their own children at two to one.
+treats each predeceased child as if alive and runs the ordinary calculation to
+find that child's individual portion — the **notional share**.
+
+What happens to that notional share depends on which construction of section 4
+you take, and the two give different answers:
+
+| Construction | The notional share goes to | Default |
+| --- | --- | --- |
+| **As the courts apply it** — *Kamal Khan v Mst. Zainab*, PLD 1983 Lahore 546, endorsed in *Mst. Zainab v Kamal Khan*, PLD 1990 SC 1051 | **All of that child's heirs** — their widow or husband, their mother, and their children — as if the child had died immediately after the propositus | ✓ |
+| **As the section is worded** | Their children alone, two to one | |
+
+The engine implements the courts' construction by running itself again on the
+predeceased child's own heir set. An earlier version implemented only the
+textual reading, which the courts abandoned decades ago; that was a defect,
+and it is recorded in [SOURCES-CONSULTED.md](SOURCES-CONSULTED.md).
+
+One consequence surprises people: a predeceased son's mother is very often the
+deceased's own widow, so she can inherit twice — once from her husband, and
+again from her son's notional share.
+
 Every such result carries a warning to confirm the current legal position with
-a Pakistani lawyer, because the provision has been litigated repeatedly.
+a Pakistani lawyer. Section 4 was held repugnant to the injunctions of Islam
+in *Allah Rakha v Federation of Pakistan*, PLD 2000 SC 1; the appeal to the
+Shariat Appellate Bench suspends that declaration, so the section stands — but
+where that appeal has reached is a question for a lawyer, not this file.
 
 Fiqh does not change by country; the law does. Other jurisdiction modules
 (UK, US, France, Canada, Australia) belong at this same layer and are not

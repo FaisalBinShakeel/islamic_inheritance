@@ -43,6 +43,24 @@ reviewer.
 3. The open questions below, which are the points where the implementation had
    to choose and the choice is contestable.
 
+## What has been looked up since
+
+[SOURCES-CONSULTED.md](SOURCES-CONSULTED.md) records a round of source-checking
+against IslamQA, IslamWeb and Pakistani case law. It closed three of the
+questions below and corrected three defects in the engine. Reading a fatwa site
+is **not** a scholar review, so everything that remains open below still stands
+— but several items now have a named source attached rather than a developer's
+reading.
+
+| Item | Status after checking |
+| --- | --- |
+| 1. Mushtaraka in the Hanbali school | **Answered against the product specification.** Ahmad b. Hanbal sided with Abu Hanifa; the full brothers take nothing. Kept open at low priority pending a primary Hanbali text. |
+| 3. Radd in Maliki and Shafi'i | **Closed.** Ibn Qudamah names Malik and al-Shafi'i with Zayd b. Thabit: the surplus goes to the treasury. The engine was applying radd and has been corrected. |
+| 4. Radd where a spouse is the only heir | **Closed.** Ibn Qudamah reports consensus that a spouse takes no part in radd, and explains away the report from Uthman that the old Ahl-e-Hadith behaviour rested on. Corrected. |
+| 10c. Ahl-e-Hadith, radd to a sole spouse | **Closed** by the same passage. |
+| 10d. Ahl-e-Hadith and awl | **Closed.** Ibn Qudamah: nobody in his time adopted Ibn Abbas's rejection of awl. Applying awl is right everywhere. |
+| MFLO 1961 | **Defect found and fixed.** The engine used the textual reading; Pakistani courts apply the notional-share construction of *Kamal Khan*. See below. |
+
 ## Open questions — these need an answer before launch
 
 ### 1. Mushtaraka in the Hanbali school
@@ -67,23 +85,24 @@ sisters**.
 **Needed:** confirmation that full sisters are included in that count, and
 that the division is per head with no two-to-one rule.
 
-### 3. Radd in the Maliki and Shafi'i schools
+### 3. Radd in the Maliki and Shafi'i schools — CLOSED
 
-Classically the surplus goes to the public treasury, not back to the heirs.
-Modern practice in both schools commonly applies radd. The engine applies radd
-and raises `madhhab_radd_modern_practice_not_classical`.
+Ibn Qudamah, *al-Mughni* 6/186, names Malik and al-Shafi'i alongside Zayd b.
+Thabit: the surplus goes to the treasury and nobody receives more than their
+allotted share. The engine previously applied radd in both schools; it now
+reports the remainder as undistributed.
 
-**Needed:** each school's reviewer to confirm which behaviour the calculator
-should present as its default, and what the result page should say about it.
+**Remaining, and smaller:** what a calculator should tell a user to do with
+that remainder where no functioning treasury exists. It currently says to ask
+a scholar.
 
-### 4. Radd where a spouse is the only heir
+### 4. Radd where a spouse is the only heir — CLOSED
 
-The engine gives the spouse their fixed share and reports the rest as
-undistributed, with a warning. It does not hand the surplus to the spouse.
-
-**Needed:** confirmation that this is the right thing to show a user, or a
-ruling that the surplus should go to the spouse in the absence of a bayt
-al-mal.
+Ibn Qudamah reports consensus that what is left over is not given to a spouse,
+and explains the contrary report from Uthman as a payment made on some other
+basis. The engine's behaviour for the four schools was already right; the
+Ahl-e-Hadith option, which did hand the surplus to the spouse, has been
+corrected to match.
 
 ### 5. The mu'adda reckoning
 
@@ -145,29 +164,44 @@ What a reviewer has to settle, one item at a time:
 | --- | --- | --- | --- |
 | 10a | Grandfather competing with brothers | He excludes them | Reported from Abu Bakr and Ibn Abbas, against Zayd b. Thabit |
 | 10b | Mushtaraka | Full brothers take nothing | The view of Ali, against the report from Umar |
-| 10c | Radd where a spouse is the only heir | The surplus goes to the spouse | Commonly cited from Uthman; the four schools leave it undistributed |
-| 10d | Awl | Applied as the majority applies it | Ibn Abbas rejected awl outright; that view is **not** implemented |
+| 10c | Radd where a spouse is the only heir | **CLOSED** — the spouse takes no part in radd | Ibn Qudamah reports consensus; the Uthman report is explained away |
+| 10d | Awl | **CLOSED** — applied, as everyone applies it | Ibn Qudamah: nobody in his time held Ibn Abbas's view |
 
 The underlying disagreements between the Companions are documented — Ibn
 Rushd's *Bidayat al-Mujtahid*, kitab al-fara'id, sets out all sides of each.
 What is unverified is which side contemporary scholarship of this orientation
 takes, and whether a calculator should present any single one as theirs.
 
-If the answer to 10d is that Ibn Abbas's position should be implemented, that
-is a change to the engine rather than to a flag, and it affects every awl case
-under this option.
+With 10c and 10d closed, **this option now produces the same figures as Hanafi
+in every case in the suite**, and a test asserts it. Whether that is the right
+answer is 10a and 10b, which remain open. If a reviewer changes either, the
+test fails and the guide's claim has to be rewritten with it.
 
 ## Legal review, separate from the fiqh review
 
 ### MFLO 1961 section 4 (Pakistan)
 
-The representation module needs confirmation from a **Pakistani lawyer**, not
-a scholar: the provision has been litigated repeatedly and the engine should
-not state the current legal position without that check.
+A defect was found here and fixed. The engine paid the predeceased child's
+notional share to that child's **children** only — the words of the section.
+Pakistani courts apply the construction of *Kamal Khan v Mst. Zainab*, PLD 1983
+Lahore 546, endorsed in *Mst. Zainab v Kamal Khan*, PLD 1990 SC 1051: the child
+takes a notional share which is then distributed among **all of that child's
+heirs**. The engine now does that, with the textual reading kept as an option.
 
-Specifically: whether representation applies to the children of a predeceased
-daughter on the same footing as a predeceased son, and how far down the line
-it runs.
+Still needs a **Pakistani lawyer**, not a scholar:
+
+- Whether the *Kamal Khan* construction is still the operative one, and
+  whether any later authority has moved it.
+- Where the repugnancy appeal has reached. *Allah Rakha v Federation of
+  Pakistan*, PLD 2000 SC 1, held section 4 repugnant to the injunctions of
+  Islam; the appeal to the Shariat Appellate Bench was still pending as of the
+  paper cited in [SOURCES-CONSULTED.md](SOURCES-CONSULTED.md), which suspends
+  the declaration. If that appeal has since been decided, this whole module's
+  premise changes.
+- Whether the "very loose construction" of *Muhammad Fikree* — grandchildren
+  inherit only where they would otherwise be excluded entirely — has been
+  revived anywhere. It is not implemented.
+- How far down the line representation runs.
 
 ### Other jurisdictions
 

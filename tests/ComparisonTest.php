@@ -7,6 +7,7 @@ namespace Faraid\Tests;
 use App\Locale;
 use App\SchoolComparison;
 use Faraid\Madhhab\MadhhabRules;
+use Faraid\Tests\Support\CaseRegistry;
 use Faraid\Tests\Support\SiteFixture;
 use PHPUnit\Framework\TestCase;
 
@@ -81,18 +82,63 @@ final class ComparisonTest extends TestCase
         self::assertTrue($brothers['differs']);
     }
 
-    public function testTheSoleSpouseCaseSeparatesAhlEHadithFromTheFourSchools(): void
+    public function testASoleSurvivingSpouseTakesOnlyTheFixedShareEverywhere(): void
     {
         $comparison = SchoolComparison::compare([
             'deceased_gender' => 'male',
             'heirs' => ['wives' => 1],
         ]);
 
-        self::assertFalse($comparison['unanimous']);
+        self::assertTrue($comparison['unanimous']);
 
         $wife = self::row($comparison, 'wife');
-        self::assertSame('1/4', $wife['by_school']['hanafi']);
-        self::assertSame('1', $wife['by_school']['ahl_e_hadith']);
+        foreach (MadhhabRules::keys() as $position) {
+            self::assertSame('1/4', $wife['by_school'][$position], $position);
+        }
+    }
+
+    /**
+     * On every point this engine models, the Ahl-e-Hadith option now lands on
+     * the same figures as Hanafi. That is a finding, not a coincidence to be
+     * papered over: an earlier version differed on radd to a sole spouse, and
+     * correcting it against Ibn Qudamah removed the last divergence.
+     *
+     * If a reviewer changes any of the four choices in AhlAlHadith, this test
+     * fails and the claim in the guide has to be rewritten with it.
+     */
+    public function testAhlEHadithCurrentlyCoincidesWithHanafiThroughout(): void
+    {
+        $calculator = new \Faraid\Calculator();
+        $divergent = [];
+
+        foreach (CaseRegistry::all() as $case) {
+            if ($case->expectError !== null) {
+                continue;
+            }
+
+            $input = $case->input;
+            unset($input['madhhab']);
+
+            $hanafi = $calculator->calculate(['madhhab' => 'hanafi'] + $input);
+            $ahl = $calculator->calculate(['madhhab' => 'ahl_e_hadith'] + $input);
+
+            if (self::fingerprint($hanafi) !== self::fingerprint($ahl)) {
+                $divergent[] = $case->id;
+            }
+        }
+
+        self::assertSame([], $divergent);
+    }
+
+    private static function fingerprint(\Faraid\Result $result): string
+    {
+        $parts = [];
+        foreach ($result->shares as $share) {
+            $parts[] = $share->heir->value . '=' . (string) $share->share;
+        }
+        sort($parts);
+
+        return implode('|', $parts) . '#' . (string) $result->undistributed;
     }
 
     public function testEveryRowCoversEveryPosition(): void

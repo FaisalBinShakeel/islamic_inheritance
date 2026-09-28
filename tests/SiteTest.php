@@ -129,6 +129,44 @@ final class SiteTest extends TestCase
         self::assertStringNotContainsString('as the Ahl-e-Hadith (Ghair Muqallid) school holds', $html);
     }
 
+    /**
+     * An unchecked checkbox submits nothing. With bare `name[]` fields, a
+     * widow ticked on the second predeceased child would arrive as the first
+     * child's widow and quietly pay the wrong person.
+     */
+    public function testPredeceasedChildAnswersStayOnTheRightChild(): void
+    {
+        $response = Kernel::handle('POST', '/', [], [
+            'madhhab' => 'hanafi',
+            'deceased_gender' => 'male',
+            'jurisdiction' => 'mflo',
+            'sons' => '1',
+            'predeceased_gender' => [0 => 'male', 1 => 'male'],
+            'predeceased_sons' => [0 => '1', 1 => '1'],
+            'predeceased_daughters' => [0 => '0', 1 => '0'],
+            // Only the second child left a widow, so only index 1 is present.
+            'predeceased_spouse' => [1 => '1'],
+        ]);
+
+        $html = $response->body;
+        self::assertSame(200, $response->status);
+
+        // Three notional thirds. The widow belongs to the SECOND child and
+        // takes an eighth of his third; the first child's son keeps his whole
+        // third, untouched by a widow he does not have.
+        self::assertStringContainsString('1/24', $html);
+        self::assertMatchesRegularExpression(
+            '~Wife \(through the son who died first \(2\)\)~',
+            $html,
+            'the widow was not attributed to the second child'
+        );
+        self::assertDoesNotMatchRegularExpression(
+            '~Wife \(through the son who died first \(1\)\)~',
+            $html,
+            'the widow leaked onto the first child'
+        );
+    }
+
     public function testTheApiReturnsJson(): void
     {
         $response = Kernel::handle('POST', '/api/calculate', [], [

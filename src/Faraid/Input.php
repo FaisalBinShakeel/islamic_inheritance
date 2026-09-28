@@ -17,7 +17,7 @@ final class Input
     /** @var array<string,int> heir input key => count */
     public readonly array $counts;
 
-    /** @var list<array{gender:string,sons:int,daughters:int}> */
+    /** @var list<array{gender:string,sons:int,daughters:int,own_heirs:array<string,int>}> */
     public readonly array $predeceasedChildren;
 
     /** @var list<array{heir:string,reason:string,count:int}> */
@@ -29,6 +29,8 @@ final class Input
     public readonly MadhhabRules $madhhab;
     public readonly string $deceasedGender;
     public readonly bool $applyMflo1961;
+    /** settled (Kamal Khan / Zainab) | textual */
+    public readonly string $mfloConstruction;
     public readonly ?float $estateValue;
     public readonly float $funeral;
     public readonly float $debts;
@@ -43,6 +45,7 @@ final class Input
         MadhhabRules $madhhab,
         string $deceasedGender,
         bool $applyMflo1961,
+        string $mfloConstruction,
         ?float $estateValue,
         float $funeral,
         float $debts,
@@ -56,6 +59,7 @@ final class Input
         $this->madhhab = $madhhab;
         $this->deceasedGender = $deceasedGender;
         $this->applyMflo1961 = $applyMflo1961;
+        $this->mfloConstruction = $mfloConstruction;
         $this->estateValue = $estateValue;
         $this->funeral = $funeral;
         $this->debts = $debts;
@@ -199,6 +203,7 @@ final class Input
             $madhhab,
             $gender,
             (bool) ($raw['apply_mflo_1961'] ?? false),
+            ($raw['mflo_construction'] ?? 'settled') === 'textual' ? 'textual' : 'settled',
             $estateValue,
             $funeral,
             $debts,
@@ -249,7 +254,7 @@ final class Input
         return $amount;
     }
 
-    /** @return list<array{gender:string,sons:int,daughters:int}> */
+    /** @return list<array{gender:string,sons:int,daughters:int,own_heirs:array<string,int>}> */
     private static function readPredeceasedChildren(mixed $raw): array
     {
         if ($raw === [] || $raw === null) {
@@ -270,12 +275,38 @@ final class Input
             }
             $sons = self::readCount($child, 'sons');
             $daughters = self::readCount($child, 'daughters');
-            if ($sons + $daughters === 0) {
-                // A predeceased child with no surviving children of their own
-                // represents nobody, so they cannot take a share.
-                throw new InvalidInput('A predeceased child with no surviving children cannot inherit by representation.');
+
+            // Under the construction Pakistani courts actually apply, the
+            // notional share is distributed among ALL of the predeceased
+            // child's own heirs, not only their children — so the caller may
+            // give that child's full heir set. Their own sons and daughters
+            // remain the shorthand, because that is the common case.
+            $ownHeirs = [];
+            foreach (self::heirKeys() as $key) {
+                $count = self::readCount(is_array($child['heirs'] ?? null) ? $child['heirs'] : [], $key);
+                if ($count > 0) {
+                    $ownHeirs[$key] = $count;
+                }
             }
-            $children[] = ['gender' => $gender, 'sons' => $sons, 'daughters' => $daughters];
+            if ($sons > 0) {
+                $ownHeirs['sons'] = ($ownHeirs['sons'] ?? 0) + $sons;
+            }
+            if ($daughters > 0) {
+                $ownHeirs['daughters'] = ($ownHeirs['daughters'] ?? 0) + $daughters;
+            }
+
+            if ($ownHeirs === []) {
+                // A predeceased child with no surviving heirs of their own
+                // represents nobody, so they cannot take a share.
+                throw new InvalidInput('A predeceased child with no surviving heirs cannot inherit by representation.');
+            }
+
+            $children[] = [
+                'gender' => $gender,
+                'sons' => $sons,
+                'daughters' => $daughters,
+                'own_heirs' => $ownHeirs,
+            ];
         }
 
         return $children;

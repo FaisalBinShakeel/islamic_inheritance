@@ -152,12 +152,41 @@ final class Calculator
         }
     }
 
-    /** @param array{gender:string,sons:int,daughters:int,label:string} $child */
+    /**
+     * Pay a represented child's notional share onward.
+     *
+     * Two constructions of section 4 exist, and they give different answers.
+     *
+     * The words of the statute give the share to "the children of such son or
+     * daughter". The Lahore High Court in Kamal Khan v Mst. Zainab read it
+     * differently — the predeceased child is deemed to come back to life to
+     * take the share and then die again, so the notional share passes to ALL
+     * of that child's heirs, their widow and mother included, not only their
+     * children. The Supreme Court endorsed that reading in Mst. Zainab v Kamal
+     * Khan, PLD 1990 SC 1051, and it is the construction the courts apply.
+     *
+     * The engine defaults to the settled construction and offers the textual
+     * one as an option, because a Pakistani user asking what the law gives
+     * them needs the answer the courts would give.
+     *
+     * @param array{gender:string,sons:int,daughters:int,own_heirs:array<string,int>,label:string} $child
+     */
     private function payRepresentedChild(CalculationState $state, Fraction $portion, array $child): void
     {
+        if ($state->input->mfloConstruction === 'settled') {
+            $this->paySettledConstruction($state, $portion, $child);
+
+            return;
+        }
+
         $units = $child['sons'] * 2 + $child['daughters'];
         if ($units === 0) {
-            throw new CalculationError('A represented child with no children reached the payout stage.');
+            // The textual construction has nobody to pay: the statute names
+            // the children, and this child left none.
+            $state->undistributed = $state->undistributed->add($portion);
+            $state->addWarning('mflo_textual_construction_no_children');
+
+            return;
         }
 
         $unitShare = $portion->divide(Fraction::of($units));
@@ -181,6 +210,70 @@ final class Calculator
                 'mflo_representation_granddaughter',
                 $child['label'],
             ));
+        }
+    }
+
+    /**
+     * The notional share is itself an estate, distributed among the
+     * predeceased child's heirs by the ordinary rules — so the engine simply
+     * runs itself again on that heir set and scales the result.
+     *
+     * @param array{gender:string,sons:int,daughters:int,own_heirs:array<string,int>,label:string} $child
+     */
+    private function paySettledConstruction(CalculationState $state, Fraction $portion, array $child): void
+    {
+        $nested = $this->run(Input::fromArray([
+            'madhhab' => $state->input->madhhab->key(),
+            'deceased_gender' => $child['gender'],
+            'heirs' => $child['own_heirs'],
+        ]));
+
+        foreach ($nested->shares as $share) {
+            // From the deceased's side these are grandchildren, so name them
+            // that way. Everyone else — the child's widow, their mother — keeps
+            // their own relationship, which the "through whom" label makes
+            // readable.
+            $heir = match ($share->heir) {
+                HeirType::Son => HeirType::PredeceasedChildsSon,
+                HeirType::Daughter => HeirType::PredeceasedChildsDaughter,
+                default => $share->heir,
+            };
+
+            $reasonKey = match ($share->heir) {
+                HeirType::Son => 'mflo_representation_grandson',
+                HeirType::Daughter => 'mflo_representation_granddaughter',
+                default => $share->reasonKey,
+            };
+
+            $state->addShare(new Share(
+                $heir,
+                $share->count,
+                $portion->multiply($share->share),
+                'representation',
+                $reasonKey,
+                $child['label'],
+            ));
+        }
+
+        if ($nested->undistributed->isPositive()) {
+            $state->undistributed = $state->undistributed->add($portion->multiply($nested->undistributed));
+        }
+
+        foreach ($nested->warnings as $warning) {
+            if (str_starts_with($warning, 'madhhab_')) {
+                continue;
+            }
+            $state->addWarning($warning);
+        }
+
+        $state->addWarning('mflo_settled_construction');
+
+        // Only children were entered, so the answer happens to match the
+        // textual reading — but a widow or a surviving mother of that child
+        // would change it, and the user should be told they were not asked.
+        $onlyChildren = array_diff(array_keys($child['own_heirs']), ['sons', 'daughters']) === [];
+        if ($onlyChildren) {
+            $state->addWarning('mflo_other_heirs_of_predeceased_child_not_entered');
         }
     }
 

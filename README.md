@@ -172,9 +172,22 @@ The engine, the site, the installer and the tests are done. The fiqh review is
 not, and nothing should be promoted until it is. See
 [docs/REVIEW-CHECKLIST.md](docs/REVIEW-CHECKLIST.md).
 
-The Ahl-e-Hadith option needs particular care: **none of its four
-distinguishing choices has been confirmed by anyone qualified in it**, and no
-fatwa is cited for any of them. The underlying disagreements between the
-Companions are well documented; which side contemporary scholarship of that
-orientation takes is what remains unverified. Every result under that option
-says so, and item 10 of the review checklist breaks it down point by point.
+A round of source-checking against IslamQA, IslamWeb and Pakistani case law
+closed several of those questions and **corrected three defects**, all recorded
+with quotations and URLs in
+[docs/SOURCES-CONSULTED.md](docs/SOURCES-CONSULTED.md):
+
+- Radd was being applied in the **Maliki and Shafi'i** schools. Ibn Qudamah
+  names both alongside Zayd b. Thabit: the surplus goes to the treasury. Fixed.
+- The **Ahl-e-Hadith** option handed a sole surviving spouse the whole estate,
+  on a report from Uthman that the same source explains away against a reported
+  consensus. Fixed — and with it, that option now matches Hanafi throughout.
+- **MFLO 1961 section 4** was implemented as the section is worded. Pakistani
+  courts apply the notional-share construction of *Kamal Khan v Mst. Zainab*,
+  under which the predeceased child's widow and mother also take a part. Fixed,
+  with the textual reading kept as an option.
+
+Reading a fatwa site is not a scholar review, so
+[docs/REVIEW-CHECKLIST.md](docs/REVIEW-CHECKLIST.md) still stands. Two of the
+Ahl-e-Hadith choices remain unverified and every result under that option says
+so.

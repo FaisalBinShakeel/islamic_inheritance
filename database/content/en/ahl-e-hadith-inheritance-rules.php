@@ -40,15 +40,19 @@ return [
 <p><strong>Ali</strong> held that this is simply the outcome: they take nothing. <strong>Umar</strong> is reported to have let the full brothers share the maternal siblings' third with them, reasoning that they share the same mother. The Hanafi and Hanbali schools took the first; the Maliki and Shafi'i took the second.</p>
 <p>This calculator's Ahl-e-Hadith option takes Ali's view. That is a choice, not a certainty, and the comparison table on your result will show you both outcomes.</p>
 
-<h3>4. A surviving spouse as the only heir</h3>
+<h3>4. A surviving spouse as the only heir — we got this wrong, and corrected it</h3>
 <p>A woman dies leaving only her husband. He takes his half. What happens to the other half?</p>
-<p>Classically it passes to the public treasury, and the return of a surplus to the heirs — <em>radd</em> — does not reach a husband or wife. A report is commonly cited from <strong>Uthman</strong> of giving the surplus to a spouse, and the reasoning offered today is that there is no functioning treasury to receive it.</p>
-<p>The four schools in this calculator leave that remainder undistributed and say so on the result. The Ahl-e-Hadith option gives it to the spouse. This is the point where the two diverge most visibly on an otherwise ordinary estate, so it is worth checking against your own understanding.</p>
+<p>This calculator used to give it to him under the Ahl-e-Hadith option, on a report from <strong>Uthman</strong> of giving left-over wealth to a husband. That was wrong, and we found it by going and reading the source instead of relying on what is commonly said.</p>
+<p>Ibn Qudamah, in <em>al-Mughni</em>, deals with that very report:</p>
+<blockquote>With regard to the spouses, what is left over should not be given to them, according to the consensus of the scholars, but it was narrated from Uthman that he did give the left-over wealth to the husband, but perhaps he was a relative on the father's side or on the mother's side, so he gave that to him, or he gave it from the bayt al-mal and not by way of inheritance.</blockquote>
+<p>So the single report the old behaviour rested on is explained away by the same authority, against a reported consensus. The husband now takes his half, and the remainder is reported as undistributed — the same as all four schools.</p>
+<p>Worth noting where this leaves things: with that corrected, <strong>this option now produces exactly the same figures as the Hanafi school on every case we test</strong>. That is an honest outcome rather than a disappointing one. The remaining differences are matters of which Companion's view is preferred, and on the two that are still open — the grandfather, and Mushtaraka — the choices here happen to coincide with Hanafi too.</p>
 
 <h2>What we have not verified — read this before relying on any of it</h2>
 <p>We are being deliberately direct here, because the alternative would be dishonest.</p>
 <p>The four points above are genuine, documented disagreements among the Companions. That part is solid, and <em>Bidayat al-Mujtahid</em> will show you all sides of each.</p>
-<p><strong>Which side contemporary Ahl-e-Hadith scholarship actually takes on each one, we have not confirmed.</strong> The choices built into this calculator are the ones most commonly attributed, and they may well be right — but we are not citing a fatwa, we have not put them to anyone qualified in this orientation, and we are not going to pretend otherwise by attaching an impressive-looking reference to something we have not checked.</p>
+<p>Two of the four have since been checked against sources and settled. <strong>Awl</strong> is applied by everybody — Ibn Qudamah records that nobody in his day held Ibn Abbas's view, and nobody has revived it. <strong>Radd to a sole spouse</strong> is settled the other way, and correcting it changed this calculator's output, as described above.</p>
+<p><strong>The other two — the grandfather, and Mushtaraka — we have not confirmed.</strong> The choices built into this calculator are the ones most commonly attributed, and they may well be right, but we are not citing a fatwa for them, we have not put them to anyone qualified in this orientation, and we are not going to pretend otherwise by attaching an impressive-looking reference to something we have not checked.</p>
 <p>So every result produced under this option carries a notice saying exactly that, and the comparison table shows you all five positions rather than one. If you are qualified to settle any of these, please <a href="/contact">write to us</a> — your name and credentials would be published with the correction. If you think a specific answer is wrong, <a href="/report">report it</a>.</p>
 
 <h2>Common questions</h2>
@@ -59,7 +63,7 @@ return [
 <h3>Which option should I pick in the calculator?</h3>
 <p>Pick what your family follows. Whichever you choose, the result shows every other position beside it, so you can see immediately whether your case is one where it makes any difference at all. In most families it makes none.</p>
 <h3>Does this change anything for a daughter or a widow?</h3>
-<p>Not on an ordinary estate — see <a href="/blog/daughter-share-in-islamic-inheritance">the daughter's share</a> and <a href="/blog/wife-share-in-islamic-inheritance">the wife's share</a>. The one case where a widow's outcome changes is when she is the sole surviving heir, described above.</p>
+<p>No. On every case we test, this option gives the same figures as the Hanafi school — see <a href="/blog/daughter-share-in-islamic-inheritance">the daughter's share</a> and <a href="/blog/wife-share-in-islamic-inheritance">the wife's share</a>, which apply unchanged.</p>
 
 <p><a href="/">Open the calculator and compare all five positions on your own case</a>.</p>
 HTML,

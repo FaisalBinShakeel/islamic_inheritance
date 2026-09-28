@@ -25,7 +25,8 @@ final class ResultPresenter
         foreach ($result->shares as $share) {
             $rows[] = [
                 'heir' => $share->heir->value,
-                'label' => self::heirLabel($share->heir->value, $share->count, $locale),
+                'label' => self::heirLabel($share->heir->value, $share->count, $locale)
+                    . self::viaSuffix($share->via, $locale),
                 'count' => $share->count,
                 'fraction' => (string) $share->share,
                 'over_denominator' => $denominator === 1
@@ -56,6 +57,17 @@ final class ResultPresenter
 
         $notes = [];
         foreach ($result->warnings as $warning) {
+            // A school's standing points of difference are about the school,
+            // not about this calculation, and the comparison panel already
+            // lists them. Repeating them here buried the notes that actually
+            // bear on the case in front of the reader — except the ones that
+            // say the position itself is unverified, which belong up front.
+            if (str_starts_with($warning, 'madhhab_')
+                && !str_contains($warning, 'not_verified')
+                && !str_contains($warning, 'under_review')) {
+                continue;
+            }
+
             $notes[] = [
                 'key' => $warning,
                 'text' => Translator::get('warning.' . $warning, [], $locale),
@@ -103,6 +115,22 @@ final class ResultPresenter
         }
 
         return $reason;
+    }
+
+    /** " (through the son who died first (1))", or nothing when there is no chain. */
+    private static function viaSuffix(?string $via, string $locale): string
+    {
+        if ($via === null) {
+            return '';
+        }
+
+        if (preg_match('~^predeceased_(son|daughter)_(\d+)$~', $via, $match) === 1) {
+            $who = Translator::get('ui.via.predeceased_' . $match[1], ['n' => $match[2]], $locale);
+        } else {
+            $who = $via;
+        }
+
+        return ' (' . Translator::get('ui.result.via', ['who' => $who], $locale) . ')';
     }
 
     public static function heirLabel(string $heir, int $count, ?string $locale = null): string
