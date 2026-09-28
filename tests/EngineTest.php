@@ -60,7 +60,7 @@ final class EngineTest extends TestCase
             $groups[$case->group] = true;
         }
 
-        foreach (['single_heir', 'spouse', 'descendants', 'siblings', 'awl', 'radd', 'named_case', 'exclusion', 'madhhab', 'mflo_1961', 'estate', 'validation'] as $required) {
+        foreach (['single_heir', 'spouse', 'descendants', 'siblings', 'awl', 'radd', 'named_case', 'exclusion', 'madhhab', 'mflo_1961', 'estate', 'validation', 'ahl_e_hadith'] as $required) {
             self::assertArrayHasKey($required, $groups, sprintf('No cases cover "%s".', $required));
         }
     }

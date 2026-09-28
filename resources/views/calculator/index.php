@@ -34,11 +34,14 @@ $jurisdiction = (string) $v('jurisdiction', 'classical');
                 <label for="f-madhhab"><?= e(t('ui.madhhab')) ?></label>
                 <select id="f-madhhab" name="madhhab" required aria-describedby="f-madhhab-h">
                     <option value=""><?= e(t('ui.madhhab.choose')) ?></option>
-                    <?php foreach (['hanafi', 'shafii', 'maliki', 'hanbali'] as $school): ?>
+                    <?php foreach (Faraid\Madhhab\MadhhabRules::keys() as $school): ?>
                         <option value="<?= e($school) ?>" <?= $madhhab === $school ? 'selected' : '' ?>><?= e(t('ui.madhhab.' . $school)) ?></option>
                     <?php endforeach; ?>
                 </select>
-                <p class="hint" id="f-madhhab-h"><?= e(t('ui.madhhab.help')) ?></p>
+                <p class="hint" id="f-madhhab-h">
+                    <?= e(t('ui.madhhab.help')) ?><br>
+                    <?= e(t('ui.madhhab.not_a_school')) ?>
+                </p>
             </div>
 
             <label id="gender-label"><?= e(t('ui.deceased_gender')) ?></label>

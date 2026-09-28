@@ -214,7 +214,7 @@ table.shares tfoot td { font-weight: 600; padding-top: .7rem; }
 .why li:last-child { border-bottom: 0; }
 .why b { font-weight: 600; }
 .nowrap { white-space: nowrap; }
-.why span { display: block; color: var(--ink-soft); font-size: .93rem; }
+.why li > span { display: block; color: var(--ink-soft); font-size: .93rem; }
 
 .excluded { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.15rem; margin-bottom: 1.25rem; }
 .excluded h3 { margin-top: 0; font-size: 1rem; }
@@ -224,6 +224,24 @@ table.shares tfoot td { font-weight: 600; padding-top: .7rem; }
 .note { border-inline-start: 3px solid var(--line-strong); padding: .5rem .85rem; margin-bottom: .5rem; font-size: .9rem; color: var(--ink-soft); background: var(--paper); border-radius: 0 var(--radius) var(--radius) 0; }
 .note--high { border-inline-start-color: var(--danger); background: var(--danger-wash); color: #5d2018; }
 .note--normal { border-inline-start-color: var(--gold); background: var(--gold-wash); }
+
+/* What each school says — attribution, not adjudication. */
+.compare { border-top: 1px solid var(--line); padding-top: 1.25rem; margin-bottom: 1.5rem; }
+.compare h3 { margin-top: 0; }
+.compare__verdict { font-size: .93rem; color: var(--ink-soft); margin-bottom: .9rem; }
+.compare__verdict--agree {
+    background: var(--green-wash); color: var(--green-dark);
+    border-inline-start: 3px solid var(--green);
+    padding: .6rem .85rem; border-radius: 0 var(--radius) var(--radius) 0; margin-bottom: 0;
+}
+.compare__scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.compare__table { min-width: 420px; margin-bottom: .75rem; }
+.compare__table th.is-selected, .compare__table td.is-selected { background: var(--green-wash); }
+.compare__table thead th.is-selected { color: var(--green-dark); }
+.compare__table tr.differs th[scope="row"] { box-shadow: inset 3px 0 0 var(--gold); }
+[dir="rtl"] .compare__table tr.differs th[scope="row"] { box-shadow: inset -3px 0 0 var(--gold); }
+.compare__table tr.differs td { font-weight: 600; }
+.compare__table .nothing { color: var(--ink-faint); font-weight: 400; }
 
 .disclaimer { border: 1px solid var(--line-strong); background: var(--gold-wash); border-radius: var(--radius); padding: 1rem 1.15rem; font-size: .9rem; }
 .disclaimer strong { display: block; font-family: var(--font-serif); margin-bottom: .25rem; }

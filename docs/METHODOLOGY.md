@@ -12,9 +12,14 @@ it does not calculate.
 ## Scope
 
 Classical Sunni Faraid in the four schools: Hanafi, Shafi'i, Maliki and
-Hanbali. The school is a **required** parameter with no default — the engine
-refuses to guess, because guessing means handing most of a global audience a
-confidently wrong answer.
+Hanbali, plus one further option, **Ahl-e-Hadith / Ghair Muqallid**, for those
+who do not follow a school taqlidan. The position is a **required** parameter
+with no default — the engine refuses to guess, because guessing means handing
+most of a global audience a confidently wrong answer.
+
+Every result also reports what each of the other positions produces for the
+same heirs, so the calculator states what each one holds rather than presenting
+one figure as the answer.
 
 Ja'fari (Shia) inheritance is out of scope. It is a different system, not a
 toggle, and belongs in a later phase with its own review.
@@ -94,12 +99,34 @@ divide their third equally**, male and female alike.
 
 ## Where the schools differ
 
-| Divergence | Hanafi | Shafi'i | Maliki | Hanbali |
-| --- | --- | --- | --- | --- |
-| Grandfather with full or consanguine brothers | Excludes them (Abu Hanifa) | Zayd's doctrine: they share | Zayd's doctrine | Zayd's doctrine |
-| Mushtaraka | Full brothers take nothing | They share the third | They share the third | **Take nothing — open question, see below** |
-| Radd | Applied, spouse excluded | Applied (modern practice; classically bayt al-mal) | Applied (modern practice; classically bayt al-mal) | Applied |
-| Akdariyya | Does not arise | Arises | Arises | Arises |
+| Divergence | Hanafi | Shafi'i | Maliki | Hanbali | Ahl-e-Hadith |
+| --- | --- | --- | --- | --- | --- |
+| Grandfather with full or consanguine brothers | Excludes them (Abu Hanifa) | Zayd's doctrine: they share | Zayd's doctrine | Zayd's doctrine | Excludes them |
+| Mushtaraka | Full brothers take nothing | They share the third | They share the third | **Take nothing — open question** | Take nothing |
+| Radd | Applied, spouse excluded | Applied (modern practice; classically bayt al-mal) | Applied (modern practice; classically bayt al-mal) | Applied | Applied, and reaches a sole surviving spouse |
+| Akdariyya | Does not arise | Arises | Arises | Arises | Does not arise |
+
+### Ahl-e-Hadith / Ghair Muqallid
+
+Not a fifth school, and its adherents would not call it one; `isSchoolOfLaw()`
+returns false for it. It sits in the same strategy layer because that is where
+"which position is taken where the evidence is read differently" belongs.
+
+Inheritance is mostly explicit text, so this option produces exactly what all
+four schools produce on ordinary estates. It differs at four points:
+
+| Point | This option | Basis |
+| --- | --- | --- |
+| Grandfather with brothers | He excludes them | Reported from Abu Bakr and Ibn Abbas |
+| Mushtaraka | Full brothers take nothing | The view of Ali |
+| Radd where a spouse is the only heir | The surplus goes to the spouse | Commonly cited from Uthman |
+| Awl | Applied as the majority applies it | Ibn Abbas's rejection of awl is **not** implemented |
+
+**None of these attributions has been verified**, and no fatwa is cited for
+any of them. They are the positions most commonly attributed. Every result
+under this option says so on the page, and the four points are open questions
+in [REVIEW-CHECKLIST.md](REVIEW-CHECKLIST.md). See also the guide
+`ahl-e-hadith-inheritance-rules`, which sets out all sides.
 
 Under **Zayd's doctrine** the grandfather takes whichever is best for him of:
 sharing with the brothers as though he were one of them (muqasama), one third

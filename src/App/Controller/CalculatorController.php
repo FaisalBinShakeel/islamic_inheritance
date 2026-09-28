@@ -11,6 +11,7 @@ use App\Database;
 use App\Locale;
 use App\Response;
 use App\ResultPresenter;
+use App\SchoolComparison;
 use App\Seo;
 use App\View;
 use Faraid\Calculator;
@@ -83,6 +84,12 @@ final class CalculatorController
         }
 
         $presented = ResultPresenter::present($result, Locale::active(), (string) Config::get('currency', ''));
+
+        // The same heirs under all four schools. Showing what each one holds
+        // is a smaller and more defensible claim than presenting any single
+        // figure as the answer, and it is what a family actually needs when
+        // the schools part company.
+        $comparison = SchoolComparison::compare($mapped['engine'], Locale::active());
         $shareText = ResultPresenter::asText($presented, Config::siteName() . ' — ' . t('ui.result'))
             . "\n" . Config::url(Locale::path());
 
@@ -93,6 +100,7 @@ final class CalculatorController
                 'r' => $presented,
                 'unreviewed' => (bool) Config::get('engine_unreviewed', true),
                 'shareText' => $shareText,
+                'comparison' => $comparison,
             ]),
             'error' => null,
         ];

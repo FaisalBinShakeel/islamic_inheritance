@@ -688,7 +688,10 @@ final class Calculator
             // heir for it.
             if ($state->input->madhhab->raddToSpouseWhenSoleHeir()) {
                 foreach ($state->shares() as $share) {
-                    $state->setShare($share->withShare($share->share->add($residue)));
+                    $state->setShare(
+                        $share->withShare($share->share->add($residue))
+                            ->withBasis('quranic_and_radd', 'spouse_sole_heir_takes_all')
+                    );
                 }
                 $state->raddApplied = true;
                 $state->addWarning('radd_returned_to_spouse_as_sole_heir');
@@ -704,7 +707,10 @@ final class Calculator
 
         $factor = $residue->divide($eligibleTotal);
         foreach ($eligible as $share) {
-            $state->setShare($share->withShare($share->share->add($share->share->multiply($factor))));
+            $state->setShare(
+                $share->withShare($share->share->add($share->share->multiply($factor)))
+                    ->withBasis('quranic_and_radd')
+            );
         }
 
         $state->raddApplied = true;

@@ -27,12 +27,13 @@ reviewer.
 
 ## Sign-off log
 
-| School | Reviewer | Credentials | Date | Cases covered |
+| Position | Reviewer | Credentials | Date | Cases covered |
 | --- | --- | --- | --- | --- |
 | Hanafi | _pending_ | | | |
 | Shafi'i | _pending_ | | | |
 | Maliki | _pending_ | | | |
 | Hanbali | _pending_ | | | |
+| Ahl-e-Hadith | _pending_ | | | |
 
 ## What to put in front of the reviewer
 
@@ -130,6 +131,32 @@ brothers share with him.
 Hanafi audience, and whether the companions' view should be offered as an
 option.
 
+### 10. The Ahl-e-Hadith option, as a whole
+
+This option is offered in the interface and in the engine, and **not one of
+its four distinguishing choices has been confirmed by anyone qualified in
+it**. No fatwa is cited for any of them. Each result carries
+`madhhab_ahl_e_hadith_not_verified` saying so, and the guide
+`ahl-e-hadith-inheritance-rules` states it in the article body as well.
+
+What a reviewer has to settle, one item at a time:
+
+| # | Question | What the calculator currently does | Basis it rests on |
+| --- | --- | --- | --- |
+| 10a | Grandfather competing with brothers | He excludes them | Reported from Abu Bakr and Ibn Abbas, against Zayd b. Thabit |
+| 10b | Mushtaraka | Full brothers take nothing | The view of Ali, against the report from Umar |
+| 10c | Radd where a spouse is the only heir | The surplus goes to the spouse | Commonly cited from Uthman; the four schools leave it undistributed |
+| 10d | Awl | Applied as the majority applies it | Ibn Abbas rejected awl outright; that view is **not** implemented |
+
+The underlying disagreements between the Companions are documented — Ibn
+Rushd's *Bidayat al-Mujtahid*, kitab al-fara'id, sets out all sides of each.
+What is unverified is which side contemporary scholarship of this orientation
+takes, and whether a calculator should present any single one as theirs.
+
+If the answer to 10d is that Ibn Abbas's position should be implemented, that
+is a change to the engine rather than to a flag, and it affects every awl case
+under this option.
+
 ## Legal review, separate from the fiqh review
 
 ### MFLO 1961 section 4 (Pakistan)
@@ -152,7 +179,10 @@ that advice would mislead.
 ## Before the engine is declared ready
 
 - [ ] Every case in `tests/Cases/` carries a `verified_by` value
-- [ ] All nine open questions above are closed, and the code matches the answers
+- [ ] All ten open questions above are closed, and the code matches the answers
+- [ ] The Ahl-e-Hadith option is either confirmed by a qualified reviewer, or
+      removed from the interface — leaving it there indefinitely with an
+      unverified notice is not a resting state
 - [ ] MFLO 1961 confirmed by a Pakistani lawyer
 - [ ] Reviewers' names and credentials published on the About page
 - [ ] A working way for users to report a suspected calculation error, and

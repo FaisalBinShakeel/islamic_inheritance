@@ -113,6 +113,9 @@ return [
     'reason.mflo_representation_grandson' => "Under section 4 of the Muslim Family Laws Ordinance 1961, the grandsons take the share their own father or mother would have taken had they survived.",
     'reason.mflo_representation_granddaughter' => "Under section 4 of the Muslim Family Laws Ordinance 1961, the granddaughters take a share of what their own parent would have taken.",
 
+    'reason.suffix_radd' => 'No residuary heir survived to take the remainder, so the surplus was returned in proportion and this share is larger than the fixed fraction.',
+    'reason.spouse_sole_heir_takes_all' => 'No other heir survives at all, so under this position the whole estate goes to the surviving spouse rather than the surplus passing to the public treasury.',
+
     // --------------------------------------------------------- exclusions
     'exclusion.excluded_by_father' => 'Excluded by the father, who is the nearer heir.',
     'exclusion.excluded_by_mother' => 'Excluded by the mother.',
@@ -183,8 +186,8 @@ return [
     'ui.deceased_gender' => 'The deceased was',
     'ui.male' => 'A man',
     'ui.female' => 'A woman',
-    'ui.madhhab' => 'School of law (madhhab)',
-    'ui.madhhab.help' => 'The schools agree on most cases and differ on a few. Choose the one your family follows.',
+    'ui.madhhab' => 'Which school or position to follow',
+    'ui.madhhab.help' => 'They agree on most cases and differ on a few. Choose the one your family follows — whichever you pick, the answer under every other position is shown alongside the result.',
     'ui.madhhab.choose' => 'Choose a school',
     'ui.madhhab.hanafi' => 'Hanafi',
     'ui.madhhab.shafii' => "Shafi'i",
@@ -284,6 +287,27 @@ return [
     'ui.faq.a5' => 'Section 4 of the Muslim Family Laws Ordinance 1961 gives the children of a son or daughter who died before the deceased the share their parent would have taken. Classical rules exclude them where a living son survives. It is statute, not fiqh, so it is off by default.',
     'ui.faq.q6' => 'Do my Islamic shares apply automatically where I live?',
     'ui.faq.a6' => 'In Pakistan, Islamic shares are the default legal position. In the UK, the US, Canada, Australia and much of Europe they are not — without a valid will, local intestacy law divides the estate instead. Calculating your shares is the first step; making them binding is a separate one.',
+
+    // ------------------------------------------------- comparing the schools
+    'ui.compare.title' => 'What each school says',
+    'ui.compare.unanimous' => 'Every position this calculator covers — the four schools and Ahl-e-Hadith — divides this estate in exactly the same way. There is nothing in dispute here.',
+    'ui.compare.differ' => 'They do not all agree on this case. Each column below is that position\'s own answer. This calculator reports them; it does not rule on which is correct.',
+    'ui.compare.your_school' => 'The table at the top of this page follows the :school school, which you chose.',
+    'ui.list_separator' => ', ',
+    'ui.compare.nothing' => 'Nothing',
+    'ui.compare.same_as' => 'These schools reach the same distribution:',
+    'ui.compare.notes' => 'Points the schools themselves raise',
+    'ui.compare.ask' => 'Where the schools differ, follow the one your family follows, and put the case to a qualified Mufti of that school before dividing anything.',
+    'ui.result.attributed' => 'These are the shares as the :school school holds them.',
+    'ui.result.attributed_position' => 'These are the shares as :school holds them.',
+
+    // ------------------------------------------------------ ahl-e-hadith
+    'ui.madhhab.ahl_e_hadith' => 'Ahl-e-Hadith (Ghair Muqallid)',
+    'ui.madhhab.not_a_school' => 'Ahl-e-Hadith is not a fifth school, and its adherents would not call it one. It is offered here because people ask for it by name.',
+    'warning.madhhab_ahl_e_hadith_not_verified' => 'This option follows the positions most commonly attributed to scholars who do not follow a school taqlidan. Those attributions have NOT been checked with anyone qualified in them, and no fatwa is being cited. Compare the columns below and confirm before acting.',
+    'warning.madhhab_ahl_e_hadith_grandfather_excludes_siblings' => "Here the father's father is treated as standing in the father's place and excludes the brothers — the position reported from Abu Bakr and Ibn Abbas, as in the Hanafi school, rather than Zayd b. Thabit's sharing.",
+    'warning.madhhab_ahl_e_hadith_radd_may_reach_spouse' => 'Where a husband or wife is the only surviving heir, this option gives them the surplus rather than leaving it undistributed. The four schools in this calculator do not.',
+    'warning.madhhab_ahl_e_hadith_awl_minority_view_not_applied' => "Awl is applied here as the majority applies it. Ibn Abbas rejected awl and would have placed the whole reduction on the daughters instead; that minority view is not built into this calculator.",
 
     'ui.report.title' => 'Report a suspected error',
     'ui.report.body' => 'If you believe a share here is wrong, tell us. An inheritance calculator that quietly carries a wrong rule does real harm, so reports are read and acted on.',

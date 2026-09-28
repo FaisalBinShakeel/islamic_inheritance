@@ -28,14 +28,16 @@ final class ResultPresenter
                 'label' => self::heirLabel($share->heir->value, $share->count, $locale),
                 'count' => $share->count,
                 'fraction' => (string) $share->share,
-                'over_denominator' => $share->share->numeratorOver($denominator) . '/' . $denominator,
+                'over_denominator' => $denominator === 1
+                    ? (string) $share->share->numeratorOver(1)
+                    : $share->share->numeratorOver($denominator) . '/' . $denominator,
                 'per_head' => (string) $share->perHead(),
                 'percent' => self::percent($share->share->percent(4)),
                 'amount' => $result->netEstate !== null ? $share->share->applyTo($result->netEstate) : null,
                 'amount_each' => $result->netEstate !== null && $share->count > 1
                     ? $share->perHead()->applyTo($result->netEstate)
                     : null,
-                'reason' => Translator::get('reason.' . $share->reasonKey, [], $locale),
+                'reason' => self::reason($share, $locale),
                 'basis' => $share->basis,
                 'via' => $share->via,
             ];
@@ -64,6 +66,7 @@ final class ResultPresenter
 
         return [
             'madhhab' => $result->madhhab,
+            'is_school_of_law' => \Faraid\Madhhab\MadhhabRules::fromKey($result->madhhab)->isSchoolOfLaw(),
             'denominator' => $denominator,
             'awl' => $result->awlApplied,
             'radd' => $result->raddApplied,
@@ -84,6 +87,22 @@ final class ResultPresenter
             'excluded' => $excluded,
             'notes' => $notes,
         ];
+    }
+
+    /**
+     * Radd raises a share above the fraction the text fixes, so the sentence
+     * explaining that fraction is true but no longer the whole story. The
+     * uplift is appended rather than replacing it.
+     */
+    private static function reason(Share $share, string $locale): string
+    {
+        $reason = Translator::get('reason.' . $share->reasonKey, [], $locale);
+
+        if ($share->basis === 'quranic_and_radd' && $share->reasonKey !== 'spouse_sole_heir_takes_all') {
+            $reason .= ' ' . Translator::get('reason.suffix_radd', [], $locale);
+        }
+
+        return $reason;
     }
 
     public static function heirLabel(string $heir, int $count, ?string $locale = null): string

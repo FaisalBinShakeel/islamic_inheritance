@@ -81,6 +81,54 @@ final class SiteTest extends TestCase
         self::assertStringContainsString('not a ruling', $response->body);
     }
 
+    /**
+     * Radd lifts a share above the fraction the text fixes. The sentence
+     * explaining that fraction is then true but incomplete, and a result that
+     * says "takes one half" beside a figure of three quarters reads as a bug
+     * to the one person who most needs to trust it.
+     */
+    public function testARaddedShareExplainsWhyItIsLargerThanItsFraction(): void
+    {
+        $html = Kernel::handle('POST', '/', [], [
+            'madhhab' => 'hanafi', 'deceased_gender' => 'male', 'mother' => '1', 'daughters' => '1',
+        ])->body;
+
+        self::assertStringContainsString('3/4', $html);
+        self::assertStringContainsString('surplus was returned in proportion', $html);
+    }
+
+    public function testTheResultReportsWhatEveryOtherPositionSays(): void
+    {
+        $html = Kernel::handle('POST', '/', [], [
+            'madhhab' => 'hanafi', 'deceased_gender' => 'male',
+            'paternal_grandfather' => '1', 'full_brothers' => '2',
+        ])->body;
+
+        self::assertStringContainsString('What each school says', $html);
+        foreach (\Faraid\Madhhab\MadhhabRules::keys() as $position) {
+            // Labels are escaped in the page, and "Shafi'i" carries an
+            // apostrophe, so compare against the escaped form.
+            self::assertStringContainsString(
+                e(t('ui.madhhab.' . $position)),
+                $html,
+                $position . ' is missing from the comparison'
+            );
+        }
+        self::assertStringContainsString('does not rule on which is correct', $html);
+    }
+
+    public function testAhlEHadithResultsCarryTheUnverifiedNotice(): void
+    {
+        $html = Kernel::handle('POST', '/', [], [
+            'madhhab' => 'ahl_e_hadith', 'deceased_gender' => 'male', 'sons' => '1', 'wives' => '1',
+        ])->body;
+
+        self::assertStringContainsString('NOT been checked', $html);
+        // And it must not be described as a school on the very page that says
+        // it is not one.
+        self::assertStringNotContainsString('as the Ahl-e-Hadith (Ghair Muqallid) school holds', $html);
+    }
+
     public function testTheApiReturnsJson(): void
     {
         $response = Kernel::handle('POST', '/api/calculate', [], [

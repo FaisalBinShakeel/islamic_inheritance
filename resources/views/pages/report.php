@@ -19,7 +19,7 @@ use App\Csrf;
                 <label for="r-madhhab"><?= e(t('ui.madhhab')) ?></label>
                 <select id="r-madhhab" name="madhhab">
                     <option value=""><?= e(t('ui.madhhab.choose')) ?></option>
-                    <?php foreach (['hanafi', 'shafii', 'maliki', 'hanbali'] as $school): ?>
+                    <?php foreach (Faraid\Madhhab\MadhhabRules::keys() as $school): ?>
                         <option value="<?= e($school) ?>"><?= e(t('ui.madhhab.' . $school)) ?></option>
                     <?php endforeach; ?>
                 </select>

@@ -8,6 +8,7 @@
  * @var array $r presented result
  * @var bool $unreviewed
  * @var string $shareText
+ * @var array|null $comparison what the other three schools say about this case
  */
 
 use App\Config;
@@ -19,7 +20,10 @@ $currency = $r['currency'] ?? '';
     <header class="result__head">
         <h2 class="result__title"><?= e(t('ui.result')) ?></h2>
         <p class="result__meta">
-            <?= e(t('ui.madhhab')) ?>: <?= e(t('ui.madhhab.' . $r['madhhab'])) ?>
+            <?= e(t(
+                $r['is_school_of_law'] ? 'ui.result.attributed' : 'ui.result.attributed_position',
+                ['school' => t('ui.madhhab.' . $r['madhhab'])]
+            )) ?>
             <?php if ($r['mflo']): ?> · <?= e(t('ui.jurisdiction.mflo')) ?><?php endif; ?>
             <?php if ($r['special_case'] !== null): ?> · <?= e(ucfirst(str_replace('_', ' ', (string) $r['special_case']))) ?><?php endif; ?>
         </p>
@@ -32,9 +36,11 @@ $currency = $r['currency'] ?? '';
     </header>
 
     <table class="shares">
+        <?php if ($r['denominator'] > 1): ?>
         <caption class="hint" style="caption-side:bottom;text-align:start;margin-top:.5rem">
             <?= e(t('ui.result.denominator', ['denominator' => $r['denominator']])) ?>
         </caption>
+        <?php endif; ?>
         <thead>
             <tr>
                 <th scope="col"><?= e(t('ui.result.heir')) ?></th>
@@ -109,6 +115,10 @@ $currency = $r['currency'] ?? '';
             <p class="note note--<?= e($note['severity']) ?>"><?= e($note['text']) ?></p>
         <?php endforeach; ?>
     </section>
+    <?php endif; ?>
+
+    <?php if (!empty($comparison)): ?>
+        <?= App\View::partial('calculator/comparison', ['c' => $comparison, 'selected' => $r['madhhab']]) ?>
     <?php endif; ?>
 
     <div class="disclaimer">

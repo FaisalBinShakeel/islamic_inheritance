@@ -7,13 +7,18 @@ namespace Faraid\Madhhab;
 use Faraid\Exception\InvalidInput;
 
 /**
- * The four Sunni schools agree on the overwhelming majority of cases. This
- * class holds only the points where they diverge; everything else lives in
- * the single shared engine. Four engines would mean four places for a bug to
- * hide.
+ * The Sunni schools agree on the overwhelming majority of cases. This class
+ * holds only the points where they diverge; everything else lives in the
+ * single shared engine. Separate engines would mean separate places for a bug
+ * to hide.
+ *
+ * Alongside the four schools there is one further option, Ahl-e-Hadith, for
+ * those who do not follow a school taqlidan. It is not a fifth madhhab and
+ * isSchoolOfLaw() says so, but the same strategy layer is the right place to
+ * hold its positions.
  *
  * Every flag below is a documented point of difference, and every one of them
- * is pending review by a qualified scholar of that school. See
+ * is pending review by someone qualified in that position. See
  * docs/METHODOLOGY.md and docs/REVIEW-CHECKLIST.md.
  */
 abstract class MadhhabRules
@@ -21,6 +26,16 @@ abstract class MadhhabRules
     abstract public function key(): string;
 
     abstract public function name(): string;
+
+    /**
+     * False for Ahl-e-Hadith, who do not regard themselves as following a
+     * school. The interface uses this to word the label correctly rather than
+     * calling everything a madhhab.
+     */
+    public function isSchoolOfLaw(): bool
+    {
+        return true;
+    }
 
     /**
      * Grandfather competing with full or consanguine brothers.
@@ -77,15 +92,22 @@ abstract class MadhhabRules
             'shafii', "shafi'i", 'shafi' => new Shafii(),
             'maliki' => new Maliki(),
             'hanbali' => new Hanbali(),
+            'ahl_e_hadith', 'ahle_hadith', 'ahl-e-hadith', 'salafi', 'ghair_muqallid' => new AhlAlHadith(),
             default => throw new InvalidInput(sprintf(
-                'Unknown madhhab "%s". Expected one of: hanafi, shafii, maliki, hanbali.',
+                'Unknown madhhab "%s". Expected one of: hanafi, shafii, maliki, hanbali, ahl_e_hadith.',
                 $key
             )),
         };
     }
 
-    /** @return list<string> */
+    /** Every selectable position, in the order the interface offers them. */
     public static function keys(): array
+    {
+        return ['hanafi', 'shafii', 'maliki', 'hanbali', 'ahl_e_hadith'];
+    }
+
+    /** The four schools alone, for text that speaks specifically of them. */
+    public static function schoolKeys(): array
     {
         return ['hanafi', 'shafii', 'maliki', 'hanbali'];
     }
